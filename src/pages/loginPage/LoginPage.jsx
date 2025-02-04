@@ -2,25 +2,45 @@ import React from 'react'
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../components/customInput/CustomInput';
 import AuthDiv from '../../components/authDiv/AuthDiv';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
+import { useLoginUserMutation } from '../../redux/storeApis';
+import { Config, getLocalStorage, setLocalStorage } from '../../constants/Index';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const { control, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Login Data:", data);
+  const [loginUser, {isLoading : isLoadingLoginUser} ] = useLoginUserMutation();
+
+  const isLoggedInUser = getLocalStorage(Config.userToken);
+
+  if (isLoggedInUser && location.pathname === ROUTES.login) {
+    return <Navigate to={ROUTES.home} replace />;
   };
+
+  const onSubmit = async(data) => {
+    try {
+      const response = await loginUser(data).unwrap();
+      console.log(response);
+      setLocalStorage(Config.userToken, response?.data?.token);
+      navigate(ROUTES.home);
+    } catch (error) {
+      console.log(error.data.message);
+    }
+  };
+
   return (
     <AuthDiv title={"Login"}>
 
       <CustomInput
-        label={"Username"}
-        name={"username"}
+        label={"Email"}
+        name={"email"}
         errors={errors}
         control={control}
-        rules={{ required: 'username is required!' }}
+        rules={{ required: 'email is required!' }}
       />
 
       <CustomInput
@@ -35,7 +55,7 @@ const LoginPage = () => {
         onClick={handleSubmit(onSubmit)}
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
       >
-        Login
+        {isLoadingLoginUser ? "Loading..." : "Login"}
       </button>
 
       {/* <span className='mt-3 flex gap-1'>
