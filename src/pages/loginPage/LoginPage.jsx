@@ -1,7 +1,7 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../components/customInput/CustomInput';
-import AuthDiv from '../../components/authDiv/AuthDiv';
+import AuthDiv from '../../components/divs/authDiv/AuthDiv';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
 import { useLoginUserMutation } from '../../redux/storeApis';
@@ -28,7 +28,7 @@ const LoginPage = () => {
       setLocalStorage(Config.userToken, response?.data?.token);
       navigate(ROUTES.home);
     } catch (error) {
-      console.log(error.data.message);
+      console.log(error?.data?.message || error);
     }
   };
 
