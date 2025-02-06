@@ -15,6 +15,8 @@ import ListItemText from '@mui/material/ListItemText';
 import ContactIcon from '@mui/icons-material/Contacts';
 import LeadIcon from '@mui/icons-material/Leaderboard';
 import Navbar from '../navbar/Navbar';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../routes/RouteConstants';
 
 const drawerWidth = 240;
 
@@ -74,6 +76,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const Sidebar = () => {
     const theme = useTheme();
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
     const handleDrawerOpen = () => {
@@ -84,6 +87,14 @@ const Sidebar = () => {
         setOpen(false);
     };
 
+    const fnNavigateToPage = (text) => {
+        if (text === 'Lead') {
+            navigate(ROUTES.home)
+        } else if (text === 'Contact') {
+            navigate(ROUTES.contact)
+        }
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
 
@@ -92,11 +103,12 @@ const Sidebar = () => {
             <Navbar drawerWidth={drawerWidth} open={open} handleDrawerOpen={handleDrawerOpen} />
 
             <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
+                <div className='flex items-center justify-between py-3 pr-2 pl-4 '>
+                    <span>List</span>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>
-                </DrawerHeader>
+                </div>
                 <Divider />
                 <List>
                     {['Lead', 'Contact']?.map((text, index) => (
@@ -106,6 +118,7 @@ const Sidebar = () => {
                                     { minHeight: 48, px: 2.5 },
                                     open ? { justifyContent: 'initial', } : { justifyContent: 'center' },
                                 ]}
+                                onClick={() => fnNavigateToPage(text)}
                             >
                                 <ListItemIcon
                                     sx={[
@@ -113,7 +126,7 @@ const Sidebar = () => {
                                         open ? { mr: 3, } : { mr: 'auto', },
                                     ]}
                                 >
-                                    { text === 'Lead' ? <LeadIcon/> : <ContactIcon/> }
+                                    {text === 'Lead' ? <LeadIcon /> : <ContactIcon />}
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={text}

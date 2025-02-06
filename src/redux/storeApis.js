@@ -20,13 +20,19 @@ export const crmApi = createApi({
 
     endpoints: (builder) => ({
         //users
-        loginUser : builder.mutation({ query:(data)=> ({ url : 'user/login', method : "POST", body : data  }) })
+        loginUser : builder.mutation({ query:(data)=> ({ url : 'user/login', method : "POST", body : data  }) }),
+
+        //leads
+        getAllLeads : builder.query({ query:()=>'lead' })
     }),
 
 });
 
 export const {
     //users
-    useLoginUserMutation
+    useLoginUserMutation,
+
+    //leads
+    useGetAllLeadsQuery,
     
 } = crmApi;
