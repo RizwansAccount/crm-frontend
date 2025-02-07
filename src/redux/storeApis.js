@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Config } from '../constants/Index';
 
-const TAG_TYPES = {  }
+const TAG_TYPES = {}
 
 export const crmApi = createApi({
 
@@ -20,10 +20,17 @@ export const crmApi = createApi({
 
     endpoints: (builder) => ({
         //users
-        loginUser : builder.mutation({ query:(data)=> ({ url : 'user/login', method : "POST", body : data  }) }),
+        loginUser: builder.mutation({ query: (data) => ({ url: 'user/login', method: "POST", body: data }) }),
 
         //leads
-        getAllLeads : builder.query({ query:()=>'lead' })
+        getAllLeads: builder.query({ query: () => 'lead' }),
+        getLead: builder.query({ query: (id) => `lead/${id}` }),
+
+        //files 
+        getAllFiles: builder.query({ query: (params) => `file?source=${params?.source}&source_id=${params?.source_id}` }),
+
+        //notes
+        getAllNotes: builder.query({ query: (params) => `note?source=${params?.source}&source_id=${params?.source_id}` }),
     }),
 
 });
@@ -34,5 +41,12 @@ export const {
 
     //leads
     useGetAllLeadsQuery,
-    
+    useGetLeadQuery,
+
+    //files
+    useGetAllFilesQuery,
+
+    //notes
+    useGetAllNotesQuery
+
 } = crmApi;

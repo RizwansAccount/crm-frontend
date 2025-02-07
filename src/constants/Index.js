@@ -1,10 +1,15 @@
 const serverUrl = "http://localhost:5000/crm/";
 
-export const Config = {
+const Config = {
     serverUrl: serverUrl,
     serverApiUrl: serverUrl + 'api/',
 
     userToken: 'user-token',
+};
+
+const SOURCE_TYPE = {
+    lead : "Lead",
+    contact : "Contact"
 };
 
 const setLocalStorage =(key, data)=> {
@@ -25,4 +30,7 @@ const removeLocalStorage =(key)=> {
     }
 };
 
-export {setLocalStorage, getLocalStorage, removeLocalStorage}
+export {
+    Config, SOURCE_TYPE,
+    setLocalStorage, getLocalStorage, removeLocalStorage
+}

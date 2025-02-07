@@ -1,14 +1,14 @@
-import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-const CustomInput = ({ 
-  name, 
-  type = "text", 
-  control, 
-  errors, 
-  rules = {}, 
-  label, 
+const CustomInput = ({
+  name,
+  type = "text",
+  control,
+  errors,
+  rules = {},
+  label,
   placeholder = "",
   isRequired = false
 }) => {
@@ -18,12 +18,12 @@ const CustomInput = ({
   return (
     <div className="mb-4 w-full">
       {label && <label className="block font-medium mb-1">{label}</label>}
-      
+
       <div className="relative w-full">
         <Controller
           name={name}
           control={control}
-          rules={{ required : (isRequired && "field is required!") , ...rules}}
+          rules={{ required: (isRequired && "field is required!"), ...rules }}
           render={({ field }) => (
             <input
               {...field}
@@ -33,14 +33,14 @@ const CustomInput = ({
             />
           )}
         />
-        
+
         {type === "password" && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2"
           >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            {showPassword ? <VisibilityOff /> : <Visibility />}
           </button>
         )}
       </div>

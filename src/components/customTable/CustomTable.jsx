@@ -2,12 +2,19 @@ import { Paper } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import React from 'react'
 
-const CustomTable = ({ rows, columns }) => {
+const CustomTable = ({ rows, columns, onRowClick = false, style }) => {
 
     const paginationModel = { page: 0, pageSize: 5 };
 
+    const fnOnRowClick = (params, event)=>{
+        event.defaultMuiPrevented = true;
+        if(onRowClick) {
+            onRowClick(params);
+        }
+    }
+
     return (
-        <Paper sx={{ height: 500, width: '100%' }}>
+        <Paper sx={{ height: 500, width: '100%', ...style }}>
             <DataGrid
                 rows={rows}
                 columns={columns}
@@ -23,7 +30,7 @@ const CustomTable = ({ rows, columns }) => {
                     '& .MuiDataGrid-cell:focus': { outline: 'none !important' },
                     '& .MuiDataGrid-cell:focus-within': { outline: 'none !important' }
                 }}
-                onRowClick={(params, event) => { event.defaultMuiPrevented = true }}
+                onRowClick={fnOnRowClick}
             />
         </Paper>
     )

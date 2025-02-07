@@ -46,6 +46,7 @@ const LoginPage = () => {
       <CustomInput
         label={"Password"}
         name={"password"}
+        type={"password"}
         errors={errors}
         control={control}
         rules={{ required: 'password is required!' }}

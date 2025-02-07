@@ -5,6 +5,7 @@ import LoginPage from "../pages/loginPage/LoginPage";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AppLayout from "./AppLayout";
 import ContactPage from "../pages/contactPage/ContactPage";
+import ModuleDetailsPage from "../pages/moduleDetailsPage/ModuleDetailsPage";
 
 const ReactRoute = createBrowserRouter([
     {
@@ -28,6 +29,15 @@ const ReactRoute = createBrowserRouter([
             ]
         }
        ]
+    },
+    {
+        element : <ProtectedRoutes/>,
+        children: [
+            {
+                path : `${ROUTES.moduleDetailsPage}/:id`,
+                element : <ModuleDetailsPage/>
+            }
+        ]
     }
 ]);
 
