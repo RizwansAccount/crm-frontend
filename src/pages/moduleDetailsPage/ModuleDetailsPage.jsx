@@ -79,7 +79,7 @@ const ModuleDetailsPage = () => {
   return (
     <div className='w-full min-h-screen flex flex-col pb-8 px-10'>
 
-      <h1 className='text-2xl font-semibold mt-6'>
+      <h1 className='text-xl font-semibold mt-6'>
         {`${source} Details`}
       </h1>
 

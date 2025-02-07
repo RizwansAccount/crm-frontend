@@ -14,7 +14,7 @@ const CustomTable = ({ rows, columns, onRowClick = false, style }) => {
     }
 
     return (
-        <Paper sx={{ height: 500, width: '100%', ...style }}>
+        <Paper sx={{ height: 450, width: '100%', ...style }}>
             <DataGrid
                 rows={rows}
                 columns={columns}

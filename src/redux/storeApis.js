@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Config } from '../constants/Index';
 
-const TAG_TYPES = {}
+const TAG_TYPES = { LEAD : "Lead", CONTACT : "Contact" };
 
 export const crmApi = createApi({
 
@@ -16,7 +16,7 @@ export const crmApi = createApi({
         },
     }),
 
-    tagTypes: [],
+    tagTypes: [TAG_TYPES.LEAD, TAG_TYPES.CONTACT],
 
     endpoints: (builder) => ({
         //users
@@ -24,8 +24,9 @@ export const crmApi = createApi({
         getAllUsers : builder.query({ query: () => 'user' }),
 
         //leads
-        getAllLeads: builder.query({ query: () => 'lead' }),
-        getLead: builder.query({ query: (id) => `lead/${id}` }),
+        getAllLeads: builder.query({ query: () => 'lead', providesTags: [TAG_TYPES.LEAD] }),
+        getLead: builder.query({ query: (id) => `lead/${id}`, providesTags: [TAG_TYPES.LEAD] }),
+        createLead: builder.mutation({ query: (data) => ({ url: 'lead', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.LEAD] }),
 
         //files 
         getAllFiles: builder.query({ query: (params) => `file?source=${params?.source}&source_id=${params?.source_id}` }),
@@ -44,6 +45,7 @@ export const {
     //leads
     useGetAllLeadsQuery,
     useGetLeadQuery,
+    useCreateLeadMutation,
 
     //files
     useGetAllFilesQuery,

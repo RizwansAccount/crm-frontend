@@ -13,7 +13,7 @@ const CustomMultiSelect = ({
   return (
     <div className="w-full">
 
-      {label && <label className="block font-semibold mb-1">{label}</label>}
+      {label && <label className="block text-[14px] mb-1">{label}</label>}
 
       <Controller
         name={name}

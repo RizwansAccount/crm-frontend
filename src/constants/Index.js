@@ -12,6 +12,13 @@ const SOURCE_TYPE = {
     contact : "Contact"
 };
 
+const LEAD_STATUS = {
+    new: 'new',
+    contacted: 'contacted',
+    qualified: 'qualified',
+    lost: 'lost'
+};
+
 const setLocalStorage =(key, data)=> {
     if(key && data) {
         localStorage.setItem(key, data);
@@ -31,6 +38,6 @@ const removeLocalStorage =(key)=> {
 };
 
 export {
-    Config, SOURCE_TYPE,
+    Config, SOURCE_TYPE, LEAD_STATUS,
     setLocalStorage, getLocalStorage, removeLocalStorage
 }
