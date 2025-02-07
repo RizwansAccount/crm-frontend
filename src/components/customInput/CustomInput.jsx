@@ -16,8 +16,8 @@ const CustomInput = ({
   const inputType = type === "password" && showPassword ? "text" : type;
 
   return (
-    <div className="mb-4 w-full">
-      {label && <label className="block font-medium mb-1">{label}</label>}
+    <div className="w-full">
+      {label && <label className="block font-semibold mb-1">{label}</label>}
 
       <div className="relative w-full">
         <Controller

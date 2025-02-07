@@ -11,7 +11,12 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { control, handleSubmit, formState: { errors } } = useForm();
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  });
 
   const [loginUser, {isLoading : isLoadingLoginUser} ] = useLoginUserMutation();
 
