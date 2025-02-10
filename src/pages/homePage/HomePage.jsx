@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useCreateLeadMutation, useGetAllLeadsQuery, useGetAllUsersQuery } from '../../redux/storeApis';
+import { useCreateLeadMutation, useDeleteLeadMutation, useGetAllLeadsQuery, useGetAllUsersQuery } from '../../redux/storeApis';
 import CustomTable from '../../components/customTable/CustomTable';
 import CustomPopover from '../../components/customPopover/CustomPopover';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,7 @@ const HomePage = () => {
   const { data: usersData } = useGetAllUsersQuery();
   const { data: leadsData, isLoading: isLoadingLeadsData } = useGetAllLeadsQuery();
   const [createLead, { isLoading: isLoadingCreateLead }] = useCreateLeadMutation();
+  const [deleteLead, { isLoading: isLoadingDeleteLead }] = useDeleteLeadMutation();
 
   const [createModal, setCreateModal] = useState(false);
 
@@ -60,12 +61,23 @@ const HomePage = () => {
     navigate(`${ROUTES.moduleDetailsPage}/${params.row.id}`, { state: { source: SOURCE_TYPE.lead } });
   };
 
-  const fnOnSubmit = async (data) => {
+  const fnCreateLead = async (data) => {
     try {
       const response = await createLead(data);
       if (response?.data?.response === "OK") {
         setCreateModal(false);
         reset(undefined, { keepValues: true });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fnDeleteLead = async (id) => {
+    try {
+      const response = await deleteLead(id);
+      if (response?.data?.response === "OK") {
+        console.log("Deleted Successfully");
       }
     } catch (error) {
       console.log(error);
@@ -83,6 +95,7 @@ const HomePage = () => {
         rows={leadRows}
         columns={leadColumns}
         onRowClick={fnNavigateToModuleDetailsPage}
+        onDelete={fnDeleteLead}
       />
       <CustomModal open={createModal} title={"Add Lead"} onClose={() => setCreateModal(false)}>
         <div className='w-full flex flex-col gap-4'>
@@ -97,7 +110,7 @@ const HomePage = () => {
 
           <CustomMultiSelect name={"assigned_to"} control={control} errors={errors} label={"Assigned To"} options={allRepresentatives} />
 
-          <CustomButton onClick={handleSubmit(fnOnSubmit)} >
+          <CustomButton onClick={handleSubmit(fnCreateLead)} >
             <span>{isLoadingCreateLead ? "Loading..." : "Add"}</span>
           </CustomButton>
         </div>

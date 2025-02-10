@@ -27,6 +27,7 @@ export const crmApi = createApi({
         getAllLeads: builder.query({ query: () => 'lead', providesTags: [TAG_TYPES.LEAD] }),
         getLead: builder.query({ query: (id) => `lead/${id}`, providesTags: [TAG_TYPES.LEAD] }),
         createLead: builder.mutation({ query: (data) => ({ url: 'lead', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.LEAD] }),
+        deleteLead: builder.mutation({ query: (id) => ({ url: `lead/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.LEAD] }),
 
         //files 
         getAllFiles: builder.query({ query: (params) => `file?source=${params?.source}&source_id=${params?.source_id}` }),
@@ -46,6 +47,7 @@ export const {
     useGetAllLeadsQuery,
     useGetLeadQuery,
     useCreateLeadMutation,
+    useDeleteLeadMutation,
 
     //files
     useGetAllFilesQuery,
