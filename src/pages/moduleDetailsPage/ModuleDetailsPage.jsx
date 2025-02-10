@@ -6,6 +6,8 @@ import CustomInput from '../../components/customInput/CustomInput';
 import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSelect';
 import FilesView from '../../components/views/FilesView';
 import NotesView from '../../components/views/NotesView';
+import { LEAD_STATUS } from '../../constants/Index';
+import CustomSelect from '../../components/customSelect/CustomSelect';
 
 const ModuleDetailsPage = () => {
 
@@ -42,7 +44,7 @@ const ModuleDetailsPage = () => {
     }
   }, [leadDetail]);
 
-  const fnOnUpdate = async(data) => {
+  const fnOnUpdate = async (data) => {
     try {
       const response = await updateLead({ id, ...data }).unwrap();
       if (response?.data?.response === "OK") {
@@ -68,7 +70,7 @@ const ModuleDetailsPage = () => {
 
         <div className='w-full flex items-center justify-between gap-4'>
           <CustomInput name={'lead_source'} control={control} errors={errors} label={'Lead Source'} isRequired />
-          <CustomInput name={'status'} control={control} errors={errors} label={'Status'} isRequired />
+          <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired/>
         </div>
 
         <CustomMultiSelect
@@ -77,7 +79,7 @@ const ModuleDetailsPage = () => {
           errors={errors}
           label="Assign To"
           options={allRepresentatives || []}
-          isRequired
+          // isRequired
         />
 
         <button onClick={handleSubmit(fnOnUpdate)} className="w-full bg-blue-500 mt-4 text-white p-2 rounded hover:bg-blue-600">

@@ -4,12 +4,13 @@ import CustomTable from '../../components/customTable/CustomTable';
 import CustomPopover from '../../components/customPopover/CustomPopover';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
-import { SOURCE_TYPE } from '../../constants/Index';
+import { LEAD_STATUS, SOURCE_TYPE } from '../../constants/Index';
 import CustomButton from '../../components/customButton/CustomButton';
 import CustomModal from '../../components/customModal/CustomModal';
 import CustomInput from '../../components/customInput/CustomInput';
 import { useForm } from 'react-hook-form';
 import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSelect';
+import CustomSelect from '../../components/customSelect/CustomSelect';
 
 const HomePage = () => {
 
@@ -18,7 +19,7 @@ const HomePage = () => {
 
   const user_id = location?.state?.user_id;
   const { data: usersData } = useGetAllUsersQuery();
-  const { data: leadsData, refetch : refetchLeadsData, isLoading: isLoadingLeadsData } = useGetAllLeadsQuery();
+  const { data: leadsData, refetch: refetchLeadsData, isLoading: isLoadingLeadsData } = useGetAllLeadsQuery();
   const [createLead, { isLoading: isLoadingCreateLead }] = useCreateLeadMutation();
   const [deleteLead, { isLoading: isLoadingDeleteLead }] = useDeleteLeadMutation();
 
@@ -60,7 +61,7 @@ const HomePage = () => {
     assigned_to: lead?.assigned_to
   }));
 
-  useEffect(()=>{ refetchLeadsData(); },[user_id]);
+  useEffect(() => { refetchLeadsData(); }, [user_id]);
 
   const fnNavigateToModuleDetailsPage = (params) => {
     navigate(`${ROUTES.moduleDetailsPage}/${params.row.id}`, { state: { source: SOURCE_TYPE.lead } });
@@ -110,7 +111,7 @@ const HomePage = () => {
           </div>
           <div className='flex gap-4'>
             <CustomInput name={"lead_source"} control={control} errors={errors} label={"Source"} isRequired />
-            <CustomInput name={"status"} control={control} errors={errors} label={"Status"} isRequired />
+            <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired/>
           </div>
 
           <CustomMultiSelect name={"assigned_to"} control={control} errors={errors} label={"Assigned To"} options={allRepresentatives} />
