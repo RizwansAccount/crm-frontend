@@ -63,7 +63,7 @@ const HomePage = () => {
 
   const fnCreateLead = async (data) => {
     try {
-      const response = await createLead(data);
+      const response = await createLead(data).unwrap();
       if (response?.data?.response === "OK") {
         setCreateModal(false);
         reset(undefined, { keepValues: true });
@@ -75,7 +75,7 @@ const HomePage = () => {
 
   const fnDeleteLead = async (id) => {
     try {
-      const response = await deleteLead(id);
+      const response = await deleteLead(id).unwrap();
       if (response?.data?.response === "OK") {
         console.log("Deleted Successfully");
       }

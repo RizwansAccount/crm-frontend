@@ -44,7 +44,7 @@ const ModuleDetailsPage = () => {
 
   const fnOnUpdate = async(data) => {
     try {
-      const response = await updateLead({ id, ...data });
+      const response = await updateLead({ id, ...data }).unwrap();
       if (response?.data?.response === "OK") {
         console.log("Updated Successfully");
       };
@@ -86,8 +86,8 @@ const ModuleDetailsPage = () => {
 
       </div>
 
-      <FilesView source={source} source_id={id} />
       <NotesView source={source} source_id={id} />
+      <FilesView source={source} source_id={id} />
 
     </div>
   )

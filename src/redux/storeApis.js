@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Config } from '../constants/Index';
 
-const TAG_TYPES = { LEAD : "Lead", CONTACT : "Contact", FILES : "Files" };
+const TAG_TYPES = { LEAD : "Lead", CONTACT : "Contact", FILES : "Files", NOTES : "Notes" };
 
 export const crmApi = createApi({
 
@@ -16,7 +16,7 @@ export const crmApi = createApi({
         },
     }),
 
-    tagTypes: [TAG_TYPES.LEAD, TAG_TYPES.CONTACT, TAG_TYPES.FILES],
+    tagTypes: [TAG_TYPES.LEAD, TAG_TYPES.CONTACT, TAG_TYPES.FILES, TAG_TYPES.NOTES],
 
     endpoints: (builder) => ({
         //users
@@ -36,9 +36,9 @@ export const crmApi = createApi({
         deleteFile: builder.mutation({ query: (id) => ({ url: `file/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.FILES] }),
 
         //notes
-        createNote: builder.mutation({ query: (data) => ({ url: 'note', method: "POST", body: data }) }),
-        getAllNotes: builder.query({ query: (params) => `note?source=${params?.source}&source_id=${params?.source_id}` }),
-        deleteNote: builder.mutation({ query: (id) => ({ url: `note/${id}`, method: "DELETE" }) }),
+        createNote: builder.mutation({ query: (data) => ({ url: 'note', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.NOTES] }),
+        getAllNotes: builder.query({ query: (params) => `note?source=${params?.source}&source_id=${params?.source_id}`, providesTags: [TAG_TYPES.NOTES] }),
+        deleteNote: builder.mutation({ query: (id) => ({ url: `note/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.NOTES] }),
     }),
 
 });

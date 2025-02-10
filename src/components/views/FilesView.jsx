@@ -57,7 +57,7 @@ const FilesView = ({ source, source_id }) => {
                 formData.append('source', source);
                 formData.append('source_id', source_id);
 
-                const response = await createFile(formData);
+                const response = await createFile(formData).unwrap();
                 if (response?.data?.response === "OK") {
                     console.log("Files Created Successfully");
                     setCreateModal(false);
@@ -76,7 +76,7 @@ const FilesView = ({ source, source_id }) => {
 
     const fnDeleteFile = async (id) => {
         try {
-            const response = await deleteFile(id);
+            const response = await deleteFile(id).unwrap();
             if (response?.data?.response === "OK") {
                 console.log("File Deleted Successfully");
             }
@@ -95,21 +95,24 @@ const FilesView = ({ source, source_id }) => {
             </div>
             <CustomTable onRowClick={fnOnClickRow} onDelete={fnDeleteFile} rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
 
-            <CustomModal open={createModal} onClose={() => setCreateModal(false)}>
+            <CustomModal className={"w-[40vw]"} open={createModal} onClose={() => setCreateModal(false)}>
 
-                <CustomInput
-                    name={'files'}
-                    type='file'
-                    control={control}
-                    label='Select File'
-                    isRequired
-                    errors={errors}
-                    multiple
-                />
+                <div className='w-full flex flex-col gap-6 items-end'>
 
-                <CustomButton onClick={handleSubmit(fnCreateFile)}>
-                    <span>{isLoadingCreateFile ? "Loading..." : "Submit"}</span>
-                </CustomButton>
+                    <CustomInput
+                        name={'files'}
+                        type='file'
+                        control={control}
+                        label='Select File'
+                        isRequired
+                        errors={errors}
+                        multiple
+                    />
+
+                    <CustomButton className={"w-fit"} onClick={handleSubmit(fnCreateFile)}>
+                        <span>{isLoadingCreateFile ? "Loading..." : "Submit"}</span>
+                    </CustomButton>
+                </div>
 
             </CustomModal>
         </div>
