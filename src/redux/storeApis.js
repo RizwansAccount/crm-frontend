@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Config } from '../constants/Index';
+import { create } from '@mui/material/styles/createTransitions';
 
 const TAG_TYPES = { LEAD : "Lead", CONTACT : "Contact" };
 
@@ -27,9 +28,11 @@ export const crmApi = createApi({
         getAllLeads: builder.query({ query: () => 'lead', providesTags: [TAG_TYPES.LEAD] }),
         getLead: builder.query({ query: (id) => `lead/${id}`, providesTags: [TAG_TYPES.LEAD] }),
         createLead: builder.mutation({ query: (data) => ({ url: 'lead', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.LEAD] }),
+        updateLead: builder.mutation({ query: ({id, ...body}) => ({ url: `lead/${id}`, method: "PATCH", body: {...body} }), invalidatesTags: [TAG_TYPES.LEAD] }),
         deleteLead: builder.mutation({ query: (id) => ({ url: `lead/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.LEAD] }),
 
         //files 
+        createFile: builder.mutation({ query: (data) => ({ url: 'file', method: "POST", body: data }) }),
         getAllFiles: builder.query({ query: (params) => `file?source=${params?.source}&source_id=${params?.source_id}` }),
 
         //notes
@@ -47,9 +50,11 @@ export const {
     useGetAllLeadsQuery,
     useGetLeadQuery,
     useCreateLeadMutation,
+    useUpdateLeadMutation,
     useDeleteLeadMutation,
 
     //files
+    useCreateFileMutation,
     useGetAllFilesQuery,
 
     //notes

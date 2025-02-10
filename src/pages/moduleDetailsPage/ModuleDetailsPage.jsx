@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { useGetAllFilesQuery, useGetAllNotesQuery, useGetAllUsersQuery, useGetLeadQuery } from '../../redux/storeApis';
-import CustomTable from '../../components/customTable/CustomTable';
-import { FileIcon } from '../../assets/icons';
+import { useGetAllUsersQuery, useGetLeadQuery, useUpdateLeadMutation } from '../../redux/storeApis';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../components/customInput/CustomInput';
 import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSelect';
+import FilesView from '../../components/views/FilesView';
+import NotesView from '../../components/views/NotesView';
 
 const ModuleDetailsPage = () => {
 
@@ -16,10 +16,11 @@ const ModuleDetailsPage = () => {
 
   const { data: usersData } = useGetAllUsersQuery();
   const { data: leadData, isLoading: isLoadingLeadData } = useGetLeadQuery(id, { skip: !id });
-  const { data: filesData, isLoading: isLoadingFilesData } = useGetAllFilesQuery({ source, source_id: id }, { skip: (!id && !source) });
-  const { data: notesData, isLoading: isLoadingNotesData } = useGetAllNotesQuery({ source, source_id: id }, { skip: (!id && !source) });
+
+  const [updateLead, { isLoading: isLoadingUpdateLead }] = useUpdateLeadMutation();
 
   const leadDetail = leadData?.data;
+  const allRepresentatives = usersData?.data?.filter((user) => user?.role === "representative");
 
   const { handleSubmit, control, setValue, formState: { errors } } = useForm({
     defaultValues: {
@@ -27,7 +28,7 @@ const ModuleDetailsPage = () => {
       contact: leadDetail?.contact || "",
       lead_source: leadDetail?.lead_source || "",
       status: leadDetail?.status || "",
-      assigned_to: leadDetail?.assigned_to || [],
+      assigned_to: leadDetail?.assigned_to?.map(user => user?._id) || [],
     },
   });
 
@@ -37,44 +38,20 @@ const ModuleDetailsPage = () => {
       setValue('contact', leadDetail?.contact);
       setValue('lead_source', leadDetail?.lead_source);
       setValue('status', leadDetail?.status);
-      setValue('assigned_to', leadDetail?.assigned_to);
+      setValue('assigned_to', leadDetail?.assigned_to?.map(user => user?._id));
     }
   }, [leadDetail]);
 
-  const fileColumns = [
-    {
-      field: "file_type",
-      headerName: "File",
-      flex: 0.5,
-      minWidth: 60,
-      renderCell: (params) => <FileIcon type={params.row.type} link={params.row.link} />
-    },
-    { field: 'original_name', headerName: 'Name', flex: 1, minWidth: 80 },
-    { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 80 },
-    { field: 'updated_by', headerName: 'Updated By', flex: 1, minWidth: 80 },
-  ];
-
-  const noteColumns = [
-    { field: 'note', headerName: 'Note', flex: 1, minWidth: 80 },
-    { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 80 },
-    { field: 'updated_by', headerName: 'Updated By', flex: 1, minWidth: 80 },
-  ];
-
-  const fileRows = filesData?.data?.map((file) => ({
-    id: file?._id,
-    type: file?.type,
-    link: file?.link,
-    original_name: file?.original_name,
-    created_by: file?.create_by?.name,
-    updated_by: file?.last_update_by?.name
-  }));
-
-  const noteRows = notesData?.data?.map((note) => ({
-    id: note?._id,
-    note: note?.note,
-    created_by: note?.create_by?.name,
-    updated_by: note?.last_update_by?.name
-  }));
+  const fnOnUpdate = async(data) => {
+    try {
+      const response = await updateLead({ id, ...data });
+      if (response?.data?.response === "OK") {
+        console.log("Updated Successfully");
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className='w-full min-h-screen flex flex-col pb-8 px-10'>
@@ -99,25 +76,18 @@ const ModuleDetailsPage = () => {
           control={control}
           errors={errors}
           label="Assign To"
-          options={usersData?.data || []}
+          options={allRepresentatives || []}
           isRequired
         />
 
-        <button onClick={handleSubmit((data) => console.log(data))} className="w-full bg-blue-500 mt-4 text-white p-2 rounded hover:bg-blue-600">
-          Update
+        <button onClick={handleSubmit(fnOnUpdate)} className="w-full bg-blue-500 mt-4 text-white p-2 rounded hover:bg-blue-600">
+          {isLoadingUpdateLead ? "Loading..." : "Update"}
         </button>
 
       </div>
 
-      <div className='w-full max-h-[65vh] p-8 rounded-lg border overflow-y-auto flex flex-col gap-3 mt-6'>
-        <h3 className='font-semibold text-xl'>Files</h3>
-        <CustomTable rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
-      </div>
-
-      <div className='w-full max-h-[65vh] p-8 rounded-lg border overflow-y-auto flex flex-col gap-3 mt-6'>
-        <h3 className='font-semibold text-xl'>Notes</h3>
-        <CustomTable rows={noteRows} columns={noteColumns} style={{ height: 350 }} />
-      </div>
+      <FilesView source={source} source_id={id} />
+      <NotesView source={source} source_id={id} />
 
     </div>
   )
