@@ -27,18 +27,20 @@ export const crmApi = createApi({
         getAllLeads: builder.query({ query: () => 'lead', providesTags: [TAG_TYPES.LEAD] }),
         getLead: builder.query({ query: (id) => `lead/${id}`, providesTags: [TAG_TYPES.LEAD] }),
         createLead: builder.mutation({ query: (data) => ({ url: 'lead', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.LEAD] }),
-        updateLead: builder.mutation({ query: ({id, ...body}) => ({ url: `lead/${id}`, method: "PATCH", body: {...body} }), invalidatesTags: [TAG_TYPES.LEAD] }),
+        updateLead: builder.mutation({ query: ({id, ...body}) => ({ url: `lead/${id}`, method: "PATCH", body }), invalidatesTags: [TAG_TYPES.LEAD] }),
         deleteLead: builder.mutation({ query: (id) => ({ url: `lead/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.LEAD] }),
 
         //files 
         createFile: builder.mutation({ query: (data) => ({ url: 'file', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.FILES] }),
         getAllFiles: builder.query({ query: (params) => `file?source=${params?.source}&source_id=${params?.source_id}`, providesTags: [TAG_TYPES.FILES] }),
         deleteFile: builder.mutation({ query: (id) => ({ url: `file/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.FILES] }),
+        updateFile: builder.mutation({ query: ({id, ...body}) => ({ url: `file/${id}`, method: "PUT", body }), invalidatesTags: [TAG_TYPES.FILES] }),
 
         //notes
         createNote: builder.mutation({ query: (data) => ({ url: 'note', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.NOTES] }),
         getAllNotes: builder.query({ query: (params) => `note?source=${params?.source}&source_id=${params?.source_id}`, providesTags: [TAG_TYPES.NOTES] }),
         deleteNote: builder.mutation({ query: (id) => ({ url: `note/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.NOTES] }),
+        updateNote: builder.mutation({ query: ({id, ...body}) => ({ url: `note/${id}`, method: "PUT", body }), invalidatesTags: [TAG_TYPES.NOTES] }),
     }),
 
 });
@@ -59,10 +61,12 @@ export const {
     useCreateFileMutation,
     useGetAllFilesQuery,
     useDeleteFileMutation,
+    useUpdateFileMutation,
 
     //notes
     useCreateNoteMutation,
     useGetAllNotesQuery,
     useDeleteNoteMutation,
+    useUpdateNoteMutation
 
 } = crmApi;
