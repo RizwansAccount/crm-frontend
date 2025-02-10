@@ -6,6 +6,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
 import { useLoginUserMutation } from '../../redux/storeApis';
 import { Config, getLocalStorage, setLocalStorage } from '../../constants/Index';
+import CustomButton from '../../components/customButton/CustomButton';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const LoginPage = () => {
     }
   });
 
-  const [loginUser, {isLoading : isLoadingLoginUser} ] = useLoginUserMutation();
+  const [loginUser, { isLoading: isLoadingLoginUser }] = useLoginUserMutation();
 
   const isLoggedInUser = getLocalStorage(Config.userToken);
 
@@ -26,12 +27,12 @@ const LoginPage = () => {
     return <Navigate to={ROUTES.home} replace />;
   };
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     try {
       const response = await loginUser(data).unwrap();
       console.log(response);
       setLocalStorage(Config.userToken, response?.data?.token);
-      navigate(ROUTES.home);
+      navigate(ROUTES.home, { state : { user_id : response?.data?.user_id } });
     } catch (error) {
       console.log(error?.data?.message || error);
     }
@@ -40,29 +41,28 @@ const LoginPage = () => {
   return (
     <AuthDiv title={"Login"}>
 
-      <CustomInput
-        label={"Email"}
-        name={"email"}
-        errors={errors}
-        control={control}
-        rules={{ required: 'email is required!' }}
-      />
+      <div className='gap-3 flex w-full flex-col pb-4'>
+        <CustomInput
+          label={"Email"}
+          name={"email"}
+          errors={errors}
+          control={control}
+          rules={{ required: 'email is required!' }}
+        />
 
-      <CustomInput
-        label={"Password"}
-        name={"password"}
-        type={"password"}
-        errors={errors}
-        control={control}
-        rules={{ required: 'password is required!' }}
-      />
+        <CustomInput
+          label={"Password"}
+          name={"password"}
+          type={"password"}
+          errors={errors}
+          control={control}
+          rules={{ required: 'password is required!' }}
+        />
 
-      <button
-        onClick={handleSubmit(onSubmit)}
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-      >
-        {isLoadingLoginUser ? "Loading..." : "Login"}
-      </button>
+        <CustomButton style={{marginTop : 12}} className={"w-full"} onClick={handleSubmit(onSubmit)}>
+          {isLoadingLoginUser ? "Loading..." : "Login"}
+        </CustomButton>
+      </div>
 
       {/* <span className='mt-3 flex gap-1'>
         Don't have an account ? 

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCreateLeadMutation, useDeleteLeadMutation, useGetAllLeadsQuery, useGetAllUsersQuery } from '../../redux/storeApis';
 import CustomTable from '../../components/customTable/CustomTable';
 import CustomPopover from '../../components/customPopover/CustomPopover';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
 import { SOURCE_TYPE } from '../../constants/Index';
 import CustomButton from '../../components/customButton/CustomButton';
@@ -14,8 +14,11 @@ import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSel
 const HomePage = () => {
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const user_id = location?.state?.user_id;
   const { data: usersData } = useGetAllUsersQuery();
-  const { data: leadsData, isLoading: isLoadingLeadsData } = useGetAllLeadsQuery();
+  const { data: leadsData, refetch : refetchLeadsData, isLoading: isLoadingLeadsData } = useGetAllLeadsQuery();
   const [createLead, { isLoading: isLoadingCreateLead }] = useCreateLeadMutation();
   const [deleteLead, { isLoading: isLoadingDeleteLead }] = useDeleteLeadMutation();
 
@@ -57,6 +60,8 @@ const HomePage = () => {
     assigned_to: lead?.assigned_to
   }));
 
+  useEffect(()=>{ refetchLeadsData(); },[user_id]);
+
   const fnNavigateToModuleDetailsPage = (params) => {
     navigate(`${ROUTES.moduleDetailsPage}/${params.row.id}`, { state: { source: SOURCE_TYPE.lead } });
   };
@@ -64,7 +69,7 @@ const HomePage = () => {
   const fnCreateLead = async (data) => {
     try {
       const response = await createLead(data).unwrap();
-      if (response?.data?.response === "OK") {
+      if (response?.response === "OK") {
         setCreateModal(false);
         reset(undefined, { keepValues: true });
       }

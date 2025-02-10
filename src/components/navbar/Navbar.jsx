@@ -3,30 +3,38 @@ import MuiAppBar from '@mui/material/AppBar';
 import { styled } from '@mui/material/styles';
 import { IconButton, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { Config, removeLocalStorage } from '../../constants/Index';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../routes/RouteConstants';
 // import { Config, removeLocalStorage } from '../../constants/Index';
 // import { useNavigate } from 'react-router-dom';
 // import { ROUTES } from '../../routes/RouteConstants';
 
 const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
-    
-    // const navigate = useNavigate();
-    
+    const navigate = useNavigate();
+
+    const fnLogout =()=>{
+        removeLocalStorage(Config.userToken);
+        navigate(ROUTES.login);
+    };
+
     // const [anchorEl, setAnchorEl] = useState(null);
-    
+
     // const fnOpenMenu = (event) => {
     //     setAnchorEl(event.currentTarget);
     // };
-    
+
     // const fnCloseMenu =()=> {
     //     setAnchorEl(null);
     // };
-    
+
     // const fnLogout = () => {
     //     fnCloseMenu();
     //     removeLocalStorage(Config.userToken);
     //     navigate(ROUTES.login);
     // };
-    
+
     const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme }) => ({
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
@@ -63,9 +71,13 @@ const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
                 >
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" noWrap component="div">
-                    Dashboard
-                </Typography>
+                <div className='flex justify-between w-full'>
+                    <span>Dashboard</span>
+                    <div onClick={fnLogout} className='flex items-center gap-2 cursor-pointer'>
+                        <ExitToAppIcon/>
+                        <span>Logout</span>
+                    </div>
+                </div>
             </Toolbar>
         </AppBar>
     )
@@ -88,23 +100,23 @@ export default Navbar
 // import { ROUTES } from '../../routes/RouteConstants';
 
 // const Navbar = () => {
-    // const navigate = useNavigate();
+// const navigate = useNavigate();
 
-    // const [anchorEl, setAnchorEl] = useState(null);
+// const [anchorEl, setAnchorEl] = useState(null);
 
-    // const fnOpenMenu = (event) => {
-    //     setAnchorEl(event.currentTarget);
-    // };
+// const fnOpenMenu = (event) => {
+//     setAnchorEl(event.currentTarget);
+// };
 
-    // const fnCloseMenu =()=> {
-    //     setAnchorEl(null);
-    // };
+// const fnCloseMenu =()=> {
+//     setAnchorEl(null);
+// };
 
-    // const fnLogout = () => {
-    //     fnCloseMenu();
-    //     removeLocalStorage(Config.userToken);
-    //     navigate(ROUTES.login);
-    // };
+// const fnLogout = () => {
+//     fnCloseMenu();
+//     removeLocalStorage(Config.userToken);
+//     navigate(ROUTES.login);
+// };
 
 //     return (
 //         <Box sx={{ flexGrow: 1 }}>
