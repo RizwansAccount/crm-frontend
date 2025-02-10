@@ -47,7 +47,6 @@ const FilesView = ({ source, source_id }) => {
 
     const fnCreateFile = async (data) => {
         try {
-            console.log(data?.files);
             const formData = new FormData();
             if (data?.files?.length > 0) {
                 data?.files?.forEach((file) => {
@@ -58,7 +57,7 @@ const FilesView = ({ source, source_id }) => {
                 formData.append('source_id', source_id);
 
                 const response = await createFile(formData).unwrap();
-                if (response?.data?.response === "OK") {
+                if (response?.response === "OK") {
                     console.log("Files Created Successfully");
                     setCreateModal(false);
                     reset();

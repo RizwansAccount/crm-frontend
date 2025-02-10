@@ -8,6 +8,7 @@ import FilesView from '../../components/views/FilesView';
 import NotesView from '../../components/views/NotesView';
 import { LEAD_STATUS } from '../../constants/Index';
 import CustomSelect from '../../components/customSelect/CustomSelect';
+import CustomButton from '../../components/customButton/CustomButton';
 
 const ModuleDetailsPage = () => {
 
@@ -79,12 +80,11 @@ const ModuleDetailsPage = () => {
           errors={errors}
           label="Assign To"
           options={allRepresentatives || []}
-          // isRequired
         />
 
-        <button onClick={handleSubmit(fnOnUpdate)} className="w-full bg-blue-500 mt-4 text-white p-2 rounded hover:bg-blue-600">
+        <CustomButton style={{marginTop : 12}} onClick={handleSubmit(fnOnUpdate)} className="w-full">
           {isLoadingUpdateLead ? "Loading..." : "Update"}
-        </button>
+        </CustomButton>
 
       </div>
 

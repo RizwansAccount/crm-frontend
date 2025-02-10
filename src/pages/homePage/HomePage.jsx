@@ -11,11 +11,13 @@ import CustomInput from '../../components/customInput/CustomInput';
 import { useForm } from 'react-hook-form';
 import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSelect';
 import CustomSelect from '../../components/customSelect/CustomSelect';
+import { useUserDataManager } from '../../hooks/useUserDataManager';
 
 const HomePage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentUser } = useUserDataManager();
 
   const user_id = location?.state?.user_id;
   const { data: usersData } = useGetAllUsersQuery();
