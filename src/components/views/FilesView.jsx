@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CustomTable from '../customTable/CustomTable';
 import { FileIcon } from '../../assets/icons';
-import { useCreateFileMutation, useGetAllFilesQuery } from '../../redux/storeApis';
+import { useCreateFileMutation, useDeleteFileMutation, useGetAllFilesQuery } from '../../redux/storeApis';
 import CustomButton from '../customButton/CustomButton';
 import CustomModal from '../customModal/CustomModal';
 import { useForm } from 'react-hook-form';
@@ -11,9 +11,9 @@ const FilesView = ({ source, source_id }) => {
 
     const { data: filesData, isLoading: isLoadingFilesData } = useGetAllFilesQuery({ source, source_id }, { skip: (!source_id && !source) });
     const [createFile, { isLoading: isLoadingCreateFile }] = useCreateFileMutation();
+    const [deleteFile, { isLoading: isLoadingDeleteFile }] = useDeleteFileMutation();
 
     const [createModal, setCreateModal] = useState(false);
-
 
     const { handleSubmit, control, reset, formState: { errors } } = useForm({
         defaultValues: {
@@ -74,15 +74,26 @@ const FilesView = ({ source, source_id }) => {
         if (link) { window.open(link, "_blank"); };
     };
 
+    const fnDeleteFile = async (id) => {
+        try {
+            const response = await deleteFile(id);
+            if (response?.data?.response === "OK") {
+                console.log("File Deleted Successfully");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div className='w-full max-h-[65vh] p-8 rounded-lg border overflow-y-auto flex flex-col gap-3 mt-6'>
             <div className='flex justify-between items-center'>
                 <h3 className='font-semibold text-xl'>Files</h3>
                 <CustomButton onClick={() => setCreateModal(true)}>
-                    <span>Create</span>
+                    <span>Upload</span>
                 </CustomButton>
             </div>
-            <CustomTable onRowClick={fnOnClickRow} rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
+            <CustomTable onRowClick={fnOnClickRow} onDelete={fnDeleteFile} rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
 
             <CustomModal open={createModal} onClose={() => setCreateModal(false)}>
 
