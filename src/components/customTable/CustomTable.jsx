@@ -52,7 +52,7 @@ const CustomTable = ({ rows, columns, onRowClick = false, onDelete, style }) => 
         sx={{
           border: 0,
           '& .MuiDataGrid-row': { cursor: 'default' },
-          '& .MuiDataGrid-cell': { cursor: 'default' },
+          '& .MuiDataGrid-cell': { cursor: 'pointer' },
           '& .MuiDataGrid-row.Mui-selected': { backgroundColor: 'transparent !important' },
           '& .MuiDataGrid-row.Mui-selected:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04) !important' },
           '& .MuiDataGrid-cell:focus': { outline: 'none !important' },

@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CustomTable from '../customTable/CustomTable';
 import { FileIcon } from '../../assets/icons';
-import { useGetAllFilesQuery } from '../../redux/storeApis';
+import { useCreateFileMutation, useGetAllFilesQuery } from '../../redux/storeApis';
+import CustomButton from '../customButton/CustomButton';
+import CustomModal from '../customModal/CustomModal';
+import { useForm } from 'react-hook-form';
+import CustomInput from '../customInput/CustomInput';
 
-const FilesView = ({source, source_id}) => {
+const FilesView = ({ source, source_id }) => {
 
     const { data: filesData, isLoading: isLoadingFilesData } = useGetAllFilesQuery({ source, source_id }, { skip: (!source_id && !source) });
+    const [createFile, { isLoading: isLoadingCreateFile }] = useCreateFileMutation();
+
+    const [createModal, setCreateModal] = useState(false);
+
+
+    const { handleSubmit, control, reset, formState: { errors } } = useForm({
+        defaultValues: {
+            files: [],
+            source,
+            source_id
+        }
+    });
 
     const fileColumns = [
         {
@@ -29,10 +45,62 @@ const FilesView = ({source, source_id}) => {
         updated_by: file?.last_update_by?.name
     }));
 
+    const fnCreateFile = async (data) => {
+        try {
+            console.log(data?.files);
+            const formData = new FormData();
+            if (data?.files?.length > 0) {
+                data?.files?.forEach((file) => {
+                    formData.append('files', file);
+                });
+
+                formData.append('source', source);
+                formData.append('source_id', source_id);
+
+                const response = await createFile(formData);
+                if (response?.data?.response === "OK") {
+                    console.log("Files Created Successfully");
+                    setCreateModal(false);
+                    reset();
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const fnOnClickRow = (params) => {
+        const link = params?.row?.link;
+        if (link) { window.open(link, "_blank"); };
+    };
+
     return (
         <div className='w-full max-h-[65vh] p-8 rounded-lg border overflow-y-auto flex flex-col gap-3 mt-6'>
-            <h3 className='font-semibold text-xl'>Files</h3>
-            <CustomTable rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
+            <div className='flex justify-between items-center'>
+                <h3 className='font-semibold text-xl'>Files</h3>
+                <CustomButton onClick={() => setCreateModal(true)}>
+                    <span>Create</span>
+                </CustomButton>
+            </div>
+            <CustomTable onRowClick={fnOnClickRow} rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
+
+            <CustomModal open={createModal} onClose={() => setCreateModal(false)}>
+
+                <CustomInput
+                    name={'files'}
+                    type='file'
+                    control={control}
+                    label='Select File'
+                    isRequired
+                    errors={errors}
+                    multiple
+                />
+
+                <CustomButton onClick={handleSubmit(fnCreateFile)}>
+                    <span>{isLoadingCreateFile ? "Loading..." : "Submit"}</span>
+                </CustomButton>
+
+            </CustomModal>
         </div>
     )
 }
