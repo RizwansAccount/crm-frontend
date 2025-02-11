@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useGetAllUsersQuery, useGetLeadQuery, useUpdateLeadMutation } from '../../redux/storeApis';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../components/customInput/CustomInput';
@@ -10,11 +10,13 @@ import { LEAD_STATUS, ROLE } from '../../constants/Index';
 import CustomSelect from '../../components/customSelect/CustomSelect';
 import CustomButton from '../../components/customButton/CustomButton';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
+import { ROUTES } from '../../routes/RouteConstants';
 
 const ModuleDetailsPage = () => {
 
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const source = location?.state?.source;
 
@@ -47,6 +49,12 @@ const ModuleDetailsPage = () => {
       setValue('assigned_to', leadDetail?.assigned_to?.map(user => user?._id));
     }
   }, [leadDetail]);
+
+  useEffect(()=>{
+    if(!source || !id){
+      return navigate(ROUTES.home);
+    }
+  },[source, id])
 
   const fnOnUpdate = async (data) => {
     try {
