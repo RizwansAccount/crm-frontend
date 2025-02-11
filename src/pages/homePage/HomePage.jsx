@@ -74,8 +74,8 @@ const HomePage = () => {
 
   useEffect(() => { refetchLeadsData(); }, [user_id]);
 
-  const fnNavigateToModuleDetailsPage = (params) => {
-    navigate(`${ROUTES.moduleDetailsPage}/${params.row.id}`, { state: { source: SOURCE_TYPE.lead } });
+  const fnNavigateToLeadsPage = (params) => {
+    navigate(`${ROUTES.leadDetailsPage}/${params.row.id}`);
   };
 
   const fnCreateLead = async (data) => {
@@ -111,7 +111,7 @@ const HomePage = () => {
       <CustomTable
         rows={leadRows}
         columns={leadColumns}
-        onRowClick={fnNavigateToModuleDetailsPage}
+        onRowClick={fnNavigateToLeadsPage}
       />
       <CustomModal open={createModal} title={"Add Lead"} onClose={() => setCreateModal(false)}>
         <div className='w-full flex flex-col gap-4'>
