@@ -24,7 +24,7 @@ const CustomPopover = ({ list }) => {
         <Box>
             {list?.length && <Chip
                 icon={<PersonIcon color='black' />}
-                label={`${list?.length} Assignees`}
+                label={`${list?.length} Assignment`}
                 onClick={handleClick}
                 variant="outlined"
                 size="small"
