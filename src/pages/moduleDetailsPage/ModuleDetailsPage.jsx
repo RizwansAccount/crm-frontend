@@ -6,9 +6,10 @@ import CustomInput from '../../components/customInput/CustomInput';
 import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSelect';
 import FilesView from '../../components/views/FilesView';
 import NotesView from '../../components/views/NotesView';
-import { LEAD_STATUS } from '../../constants/Index';
+import { LEAD_STATUS, ROLE } from '../../constants/Index';
 import CustomSelect from '../../components/customSelect/CustomSelect';
 import CustomButton from '../../components/customButton/CustomButton';
+import { useUserDataManager } from '../../hooks/useUserDataManager';
 
 const ModuleDetailsPage = () => {
 
@@ -19,6 +20,8 @@ const ModuleDetailsPage = () => {
 
   const { data: usersData } = useGetAllUsersQuery();
   const { data: leadData, isLoading: isLoadingLeadData } = useGetLeadQuery(id, { skip: !id });
+
+  const { currentUser } = useUserDataManager();
 
   const [updateLead, { isLoading: isLoadingUpdateLead }] = useUpdateLeadMutation();
 
@@ -71,18 +74,18 @@ const ModuleDetailsPage = () => {
 
         <div className='w-full flex items-center justify-between gap-4'>
           <CustomInput name={'lead_source'} control={control} errors={errors} label={'Lead Source'} isRequired />
-          <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired/>
+          <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired />
         </div>
 
-        <CustomMultiSelect
+        { currentUser?.role !== ROLE.representative && <CustomMultiSelect
           name="assigned_to"
           control={control}
           errors={errors}
           label="Assign To"
           options={allRepresentatives || []}
-        />
+        />}
 
-        <CustomButton style={{marginTop : 12}} onClick={handleSubmit(fnOnUpdate)} className="w-full">
+        <CustomButton style={{ marginTop: 12 }} onClick={handleSubmit(fnOnUpdate)} className="w-full">
           {isLoadingUpdateLead ? "Loading..." : "Update"}
         </CustomButton>
 

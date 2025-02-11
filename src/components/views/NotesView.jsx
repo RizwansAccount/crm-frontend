@@ -5,8 +5,13 @@ import CustomButton from '../customButton/CustomButton';
 import CustomModal from '../customModal/CustomModal';
 import CustomInput from '../customInput/CustomInput';
 import { useForm } from 'react-hook-form';
+import { DeleteForever as DeleteIcon } from '@mui/icons-material';
+import { useUserDataManager } from '../../hooks/useUserDataManager';
+import { ROLE } from '../../constants/Index';
 
 const NotesView = ({ source, source_id }) => {
+
+    const { currentUser } = useUserDataManager();
 
     const { data: notesData, isLoading: isLoadingNotesData } = useGetAllNotesQuery({ source, source_id }, { skip: (!source_id && !source) });
     const [createNote, { isLoading: isLoadingCreateNote }] = useCreateNoteMutation();
@@ -27,14 +32,27 @@ const NotesView = ({ source, source_id }) => {
 
     const noteColumns = [
         { field: 'note', headerName: 'Note', flex: 1, minWidth: 80 },
-        { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 80 },
+        { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 80, renderCell: (params) => <span>{params?.row?.created_by?.name}</span> },
         { field: 'updated_by', headerName: 'Updated By', flex: 1, minWidth: 80 },
+        {
+            field: 'actions', headerName: 'Actions', flex: 1, minWidth: 80,
+            renderCell: (params) => {
+                const isShowDeleteIcon = params?.row?.created_by?._id === currentUser?.user_id ||
+                    currentUser?.role === ROLE.admin ||
+                    currentUser?.role === ROLE.manager;
+                return (
+                    isShowDeleteIcon && <div onClick={(e) => { e.stopPropagation(); fnDeleteNote(params?.row?.id) }}>
+                        <DeleteIcon />
+                    </div>
+                )
+            }
+        }
     ];
 
     const noteRows = notesData?.data?.map((note) => ({
         id: note?._id,
         note: note?.note,
-        created_by: note?.create_by?.name,
+        created_by: note?.create_by,
         updated_by: note?.last_update_by?.name
     }));
 
@@ -95,7 +113,7 @@ const NotesView = ({ source, source_id }) => {
                     <span>Create</span>
                 </CustomButton>
             </div>
-            <CustomTable onRowClick={fnOnClickNoteRow} onDelete={fnDeleteNote} rows={noteRows} columns={noteColumns} style={{ height: 350 }} />
+            <CustomTable onRowClick={fnOnClickNoteRow} rows={noteRows} columns={noteColumns} style={{ height: 350 }} />
 
             <CustomModal className={"w-[40vw]"} open={createModal} onClose={() => setCreateModal(false)} >
 

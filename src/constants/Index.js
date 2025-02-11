@@ -19,6 +19,12 @@ const LEAD_STATUS = {
     lost: 'lost'
 };
 
+const ROLE = {
+    admin: "admin",
+    representative: "representative",
+    manager:"manager"
+};
+
 const setLocalStorage =(key, data)=> {
     if(key && data) {
         localStorage.setItem(key, data);
@@ -38,6 +44,6 @@ const removeLocalStorage =(key)=> {
 };
 
 export {
-    Config, SOURCE_TYPE, LEAD_STATUS,
+    Config, SOURCE_TYPE, LEAD_STATUS, ROLE,
     setLocalStorage, getLocalStorage, removeLocalStorage
 }

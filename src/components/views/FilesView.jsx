@@ -6,12 +6,17 @@ import CustomButton from '../customButton/CustomButton';
 import CustomModal from '../customModal/CustomModal';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../customInput/CustomInput';
+import { DeleteForever as DeleteIcon } from '@mui/icons-material';
+import { ROLE } from '../../constants/Index';
+import { useUserDataManager } from '../../hooks/useUserDataManager';
 
 const FilesView = ({ source, source_id }) => {
 
     const { data: filesData, isLoading: isLoadingFilesData } = useGetAllFilesQuery({ source, source_id }, { skip: (!source_id && !source) });
     const [createFile, { isLoading: isLoadingCreateFile }] = useCreateFileMutation();
     const [deleteFile, { isLoading: isLoadingDeleteFile }] = useDeleteFileMutation();
+
+    const { currentUser } = useUserDataManager();
 
     const [createModal, setCreateModal] = useState(false);
 
@@ -32,8 +37,21 @@ const FilesView = ({ source, source_id }) => {
             renderCell: (params) => <FileIcon type={params.row.type} link={params.row.link} />
         },
         { field: 'original_name', headerName: 'Name', flex: 1, minWidth: 80 },
-        { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 80 },
+        { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 80, renderCell: (params) => <span>{params?.row?.created_by?.name}</span>  },
         { field: 'updated_by', headerName: 'Updated By', flex: 1, minWidth: 80 },
+        {
+            field: 'actions', headerName: 'Actions', flex: 1, minWidth: 80,
+            renderCell: (params) => {
+                const isShowDeleteIcon = params?.row?.created_by?._id === currentUser?.user_id ||
+                    currentUser?.role === ROLE.admin ||
+                    currentUser?.role === ROLE.manager;
+                return (
+                    isShowDeleteIcon && <div onClick={(e) => { e.stopPropagation(); fnDeleteFile(params?.row?.id) }}>
+                        <DeleteIcon />
+                    </div>
+                )
+            }
+        }
     ];
 
     const fileRows = filesData?.data?.map((file) => ({
@@ -41,7 +59,7 @@ const FilesView = ({ source, source_id }) => {
         type: file?.type,
         link: file?.link,
         original_name: file?.original_name,
-        created_by: file?.create_by?.name,
+        created_by: file?.create_by,
         updated_by: file?.last_update_by?.name
     }));
 
@@ -92,7 +110,7 @@ const FilesView = ({ source, source_id }) => {
                     <span>Upload</span>
                 </CustomButton>
             </div>
-            <CustomTable onRowClick={fnOnClickRow} onDelete={fnDeleteFile} rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
+            <CustomTable onRowClick={fnOnClickRow} rows={fileRows} columns={fileColumns} style={{ height: 350 }} />
 
             <CustomModal className={"w-[40vw]"} open={createModal} onClose={() => setCreateModal(false)}>
 
