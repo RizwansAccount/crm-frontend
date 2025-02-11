@@ -1,6 +1,6 @@
 import { Box, Chip, List, ListItem, ListItemText, Popover } from '@mui/material';
 import React, { useState } from 'react';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import PersonIcon from '@mui/icons-material/Person';
 
 const CustomPopover = ({ list }) => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -23,11 +23,12 @@ const CustomPopover = ({ list }) => {
     return (
         <Box>
             {list?.length && <Chip
-                icon={<PeopleAltIcon />}
-                label={`${list?.length} Assignee${list?.length > 1 ? 's' : ''}`}
+                icon={<PersonIcon color='black' />}
+                label={`${list?.length} Assignees`}
                 onClick={handleClick}
                 variant="outlined"
                 size="small"
+                style={{padding:6, color:'black', borderColor:'black'}}
             />}
             <Popover
                 open={open}

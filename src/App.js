@@ -9,7 +9,7 @@ import { SnackbarProvider } from 'notistack';
 const App = () => {
   return (
     <Provider store={store}>
-      <SnackbarProvider maxSnack={3} autoHideDuration={2000} >
+      <SnackbarProvider maxSnack={3} autoHideDuration={2000}  anchorOrigin={{vertical: 'top', horizontal: 'right'}} >
         <RouterProvider router={ReactRoute} />
       </SnackbarProvider>
     </Provider>

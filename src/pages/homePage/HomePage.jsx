@@ -48,7 +48,7 @@ const HomePage = () => {
     { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
     { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 150, renderCell: (params) => <h1>{params?.row?.created_by?.name}</h1> },
     { field: 'last_updated_by', headerName: 'Updated By', flex: 1, minWidth: 150 },
-    { field: 'assigned_to', headerName: 'Assigned To', flex: 1, minWidth: 150, renderCell: (params) => <CustomPopover list={params.value} /> },
+    { field: 'assigned_to', headerName: 'Assigned To', flex: 1, minWidth: 150, renderCell: (params) => <CustomPopover list={params?.value} /> },
     { field: 'status', headerName: 'Status', flex: 0.5, minWidth: 150 },
     {
       field: 'actions', headerName: 'Actions', flex: 0.5, minWidth: 150,

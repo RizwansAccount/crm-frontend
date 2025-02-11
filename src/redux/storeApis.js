@@ -43,6 +43,9 @@ export const crmApi = createApi({
         getAllNotes: builder.query({ query: (params) => `note?source=${params?.source}&source_id=${params?.source_id}`, providesTags: [TAG_TYPES.NOTES] }),
         deleteNote: builder.mutation({ query: (id) => ({ url: `note/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.NOTES] }),
         updateNote: builder.mutation({ query: ({ id, ...body }) => ({ url: `note/${id}`, method: "PUT", body }), invalidatesTags: [TAG_TYPES.NOTES] }),
+
+        //assignment
+        removeAssignment: builder.mutation({ query: (data) => ({ url: `assignment/remove-assign`, method: "DELETE", body: data }) }),
     }),
 
 });
@@ -71,6 +74,9 @@ export const {
     useCreateNoteMutation,
     useGetAllNotesQuery,
     useDeleteNoteMutation,
-    useUpdateNoteMutation
+    useUpdateNoteMutation,
+
+    //removeAssignment
+    useRemoveAssignmentMutation
 
 } = crmApi;

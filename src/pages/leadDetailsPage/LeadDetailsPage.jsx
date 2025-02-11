@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useGetAllUsersQuery, useGetLeadQuery, useUpdateLeadMutation } from '../../redux/storeApis';
+import { useGetAllUsersQuery, useGetLeadQuery, useRemoveAssignmentMutation, useUpdateLeadMutation } from '../../redux/storeApis';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../components/customInput/CustomInput';
 import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSelect';
@@ -19,12 +19,13 @@ const LeadDetailsPage = () => {
   const source = SOURCE_TYPE.lead;
 
   const { data: usersData } = useGetAllUsersQuery();
-  const { data: leadData, isLoading: isLoadingLeadData } = useGetLeadQuery(id, { skip: !id });
+  const { data: leadData, refetch : refetchLeadData , isLoading: isLoadingLeadData } = useGetLeadQuery(id, { skip: !id });
 
   const { currentUser } = useUserDataManager();
   const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
 
   const [updateLead, { isLoading: isLoadingUpdateLead }] = useUpdateLeadMutation();
+  const [removeAssign, {isLoading : isLoadingRemoveAssign}] = useRemoveAssignmentMutation();
 
   const leadDetail = leadData?.data;
   const allRepresentatives = usersData?.data?.filter((user) => user?.role === ROLE.representative);
@@ -62,6 +63,18 @@ const LeadDetailsPage = () => {
     }
   };
 
+  const fnRemoveAssignment = async (data)=> {
+    try {
+      const response = await removeAssign({source, source_id : id, ...data}).unwrap();
+      if(response?.response === "OK") {
+        refetchLeadData();
+        fnShowSuccessSnackbar("Assignment removed successfully!");
+      }
+    } catch (error) {
+      fnShowErrorSnackbar(error?.data?.mesage)
+    }
+  };
+
   return (
     <div className='w-full min-h-screen flex flex-col pb-8 px-10'>
 
@@ -86,6 +99,7 @@ const LeadDetailsPage = () => {
           errors={errors}
           label="Assign To"
           options={allRepresentatives || []}
+          onRemoveAssignment={fnRemoveAssignment}
         />}
 
         <CustomButton style={{ marginTop: 12 }} onClick={handleSubmit(fnOnUpdate)} className="w-full">
