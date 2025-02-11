@@ -31,6 +31,13 @@ export const crmApi = createApi({
         createLead: builder.mutation({ query: (data) => ({ url: 'lead', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.LEAD] }),
         updateLead: builder.mutation({ query: ({ id, ...body }) => ({ url: `lead/${id}`, method: "PATCH", body }), invalidatesTags: [TAG_TYPES.LEAD] }),
         deleteLead: builder.mutation({ query: (id) => ({ url: `lead/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.LEAD] }),
+        
+        //leads
+        getAllContacts: builder.query({ query: () => 'contact', providesTags: [TAG_TYPES.CONTACT] }),
+        getContact: builder.query({ query: (id) => `contact/${id}`, providesTags: [TAG_TYPES.CONTACT] }),
+        createContact: builder.mutation({ query: (data) => ({ url: 'contact', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.CONTACT] }),
+        updateContact: builder.mutation({ query: ({ id, ...body }) => ({ url: `contact/${id}`, method: "PATCH", body }), invalidatesTags: [TAG_TYPES.CONTACT] }),
+        deleteContact: builder.mutation({ query: (id) => ({ url: `contact/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.CONTACT] }),
 
         //files 
         createFile: builder.mutation({ query: (data) => ({ url: 'file', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.FILES] }),
@@ -63,6 +70,13 @@ export const {
     useCreateLeadMutation,
     useUpdateLeadMutation,
     useDeleteLeadMutation,
+
+    //contacts
+    useGetAllContactsQuery,
+    useGetContactQuery,
+    useCreateContactMutation,
+    useUpdateContactMutation,
+    useDeleteContactMutation,
 
     //files
     useCreateFileMutation,

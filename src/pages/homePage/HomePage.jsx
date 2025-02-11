@@ -4,7 +4,7 @@ import CustomTable from '../../components/customTable/CustomTable';
 import CustomPopover from '../../components/customPopover/CustomPopover';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
-import { LEAD_STATUS, ROLE, SOURCE_TYPE } from '../../constants/Index';
+import { LEAD_STATUS, ROLE } from '../../constants/Index';
 import CustomButton from '../../components/customButton/CustomButton';
 import CustomModal from '../../components/customModal/CustomModal';
 import CustomInput from '../../components/customInput/CustomInput';
@@ -76,7 +76,7 @@ const HomePage = () => {
 
   useEffect(() => { refetchLeadsData(); }, [user_id]);
 
-  const fnNavigateToLeadsPage = (params) => {
+  const fnNavigateToLeadDetailsPage = (params) => {
     navigate(`${ROUTES.leadDetailsPage}/${params.row.id}`);
   };
 
@@ -114,7 +114,7 @@ const HomePage = () => {
       <CustomTable
         rows={leadRows}
         columns={leadColumns}
-        onRowClick={fnNavigateToLeadsPage}
+        onRowClick={fnNavigateToLeadDetailsPage}
       />
       <CustomModal open={createModal} title={"Add Lead"} onClose={() => setCreateModal(false)}>
         <div className='w-full flex flex-col gap-4'>

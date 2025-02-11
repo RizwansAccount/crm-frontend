@@ -7,12 +7,14 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { Config, removeLocalStorage } from '../../constants/Index';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
+import { useUserDataManager } from '../../hooks/useUserDataManager';
 // import { Config, removeLocalStorage } from '../../constants/Index';
 // import { useNavigate } from 'react-router-dom';
 // import { ROUTES } from '../../routes/RouteConstants';
 
 const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
     const navigate = useNavigate();
+    const { currentUser } = useUserDataManager();
 
     const fnLogout =()=>{
         removeLocalStorage(Config.userToken);
@@ -72,7 +74,7 @@ const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
                     <MenuIcon />
                 </IconButton>
                 <div className='flex justify-between w-full'>
-                    <span>Dashboard</span>
+                    <span>{`Welcome, ${currentUser?.name} (${currentUser?.role})`}</span>
                     <div onClick={fnLogout} className='flex items-center gap-2 cursor-pointer'>
                         <ExitToAppIcon/>
                         <span>Logout</span>

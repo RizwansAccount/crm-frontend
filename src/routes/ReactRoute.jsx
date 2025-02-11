@@ -6,6 +6,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import AppLayout from "./AppLayout";
 import ContactPage from "../pages/contactPage/ContactPage";
 import LeadDetailsPage from "../pages/leadDetailsPage/LeadDetailsPage";
+import ContactDetailsPage from "../pages/contactDetailsPage/ContactDetailsPage";
 
 const ReactRoute = createBrowserRouter([
     {
@@ -36,7 +37,11 @@ const ReactRoute = createBrowserRouter([
             {
                 path : `${ROUTES.leadDetailsPage}/:id`,
                 element : <LeadDetailsPage/>
-            }
+            },
+            {
+                path : `${ROUTES.contactDetailsPage}/:id`,
+                element : <ContactDetailsPage/>
+            },
         ]
     }
 ]);
