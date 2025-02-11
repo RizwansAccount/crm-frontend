@@ -4,11 +4,14 @@ import { RouterProvider } from 'react-router-dom';
 import ReactRoute from './routes/ReactRoute';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import { SnackbarProvider } from 'notistack';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <RouterProvider router={ReactRoute} />
+      <SnackbarProvider maxSnack={3} autoHideDuration={2000} >
+        <RouterProvider router={ReactRoute} />
+      </SnackbarProvider>
     </Provider>
   )
 }

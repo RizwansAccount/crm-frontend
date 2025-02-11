@@ -8,10 +8,12 @@ import { useForm } from 'react-hook-form';
 import { DeleteForever as DeleteIcon } from '@mui/icons-material';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
 import { ROLE } from '../../constants/Index';
+import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 
 const NotesView = ({ source, source_id }) => {
 
     const { currentUser } = useUserDataManager();
+    const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
 
     const { data: notesData, isLoading: isLoadingNotesData } = useGetAllNotesQuery({ source, source_id }, { skip: (!source_id && !source) });
     const [createNote, { isLoading: isLoadingCreateNote }] = useCreateNoteMutation();
@@ -62,10 +64,10 @@ const NotesView = ({ source, source_id }) => {
             if (response?.response === "OK") {
                 setCreateModal(false);
                 reset();
-                console.log("Note created successfully");
+                fnShowSuccessSnackbar("Note created successfully");
             }
         } catch (error) {
-            console.error(error);
+            fnShowErrorSnackbar(error?.data?.message);
         }
     };
 
@@ -73,10 +75,10 @@ const NotesView = ({ source, source_id }) => {
         try {
             const response = await deleteNote(id).unwrap();
             if (response?.response === "OK") {
-                console.log("Note deleted successfully");
+                fnShowSuccessSnackbar("Note deleted successfully");
             }
         } catch (error) {
-            console.error(error);
+            fnShowErrorSnackbar(error?.data?.message);
         }
     };
 
@@ -86,10 +88,10 @@ const NotesView = ({ source, source_id }) => {
             const response = await updateNote(updateData).unwrap();
             if (response?.response === "OK") {
                 fnOnUpdateModalClose();
-                console.log("Note updated successfully");
+                fnShowSuccessSnackbar("Note updated successfully");
             }
         } catch (error) {
-            console.error(error);
+            fnShowErrorSnackbar(error?.data?.message);
         }
     };
 
@@ -136,7 +138,7 @@ const NotesView = ({ source, source_id }) => {
                     <CustomInput name={'note'} label={'Note'} isRequired errors={errors} control={control} />
 
                     <CustomButton className={"w-fit"} onClick={handleSubmit(fnOnUpdateNote)}>
-                        <span>{isLoadingCreateNote ? "Loading..." : "Update"}</span>
+                        <span>{isLoadingUpdateNote ? "Loading..." : "Update"}</span>
                     </CustomButton>
 
                 </div>

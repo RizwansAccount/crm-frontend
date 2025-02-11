@@ -9,6 +9,7 @@ import CustomInput from '../customInput/CustomInput';
 import { DeleteForever as DeleteIcon } from '@mui/icons-material';
 import { ROLE } from '../../constants/Index';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
+import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 
 const FilesView = ({ source, source_id }) => {
 
@@ -17,6 +18,7 @@ const FilesView = ({ source, source_id }) => {
     const [deleteFile, { isLoading: isLoadingDeleteFile }] = useDeleteFileMutation();
 
     const { currentUser } = useUserDataManager();
+    const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
 
     const [createModal, setCreateModal] = useState(false);
 
@@ -76,13 +78,13 @@ const FilesView = ({ source, source_id }) => {
 
                 const response = await createFile(formData).unwrap();
                 if (response?.response === "OK") {
-                    console.log("Files Created Successfully");
+                    fnShowSuccessSnackbar("Files uploaded successfully!");
                     setCreateModal(false);
                     reset();
                 }
             }
         } catch (error) {
-            console.log(error);
+            fnShowErrorSnackbar(error?.data?.message);
         }
     };
 
@@ -94,11 +96,11 @@ const FilesView = ({ source, source_id }) => {
     const fnDeleteFile = async (id) => {
         try {
             const response = await deleteFile(id).unwrap();
-            if (response?.data?.response === "OK") {
-                console.log("File Deleted Successfully");
+            if (response?.response === "OK") {
+                fnShowSuccessSnackbar("Files deleted successfully!");
             }
         } catch (error) {
-            console.log(error);
+            fnShowErrorSnackbar(error?.data?.message);
         }
     };
 

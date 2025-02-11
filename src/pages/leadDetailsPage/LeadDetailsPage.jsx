@@ -10,6 +10,7 @@ import { LEAD_STATUS, ROLE, SOURCE_TYPE } from '../../constants/Index';
 import CustomSelect from '../../components/customSelect/CustomSelect';
 import CustomButton from '../../components/customButton/CustomButton';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
+import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 
 const LeadDetailsPage = () => {
 
@@ -21,6 +22,7 @@ const LeadDetailsPage = () => {
   const { data: leadData, isLoading: isLoadingLeadData } = useGetLeadQuery(id, { skip: !id });
 
   const { currentUser } = useUserDataManager();
+  const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
 
   const [updateLead, { isLoading: isLoadingUpdateLead }] = useUpdateLeadMutation();
 
@@ -49,12 +51,14 @@ const LeadDetailsPage = () => {
 
   const fnOnUpdate = async (data) => {
     try {
-      const response = await updateLead({ id, ...data }).unwrap();
-      if (response?.data?.response === "OK") {
-        console.log("Updated Successfully");
+      const { name, contact, lead_source, status } = data;
+      const modifiedData = currentUser?.role === ROLE.representative ? { name, contact, lead_source, status } : data;
+      const response = await updateLead({ id, ...modifiedData }).unwrap();
+      if (response?.response === "OK") {
+        fnShowSuccessSnackbar("Lead updated successfully!");
       };
     } catch (error) {
-      console.log(error);
+      fnShowErrorSnackbar(error?.data?.message);
     }
   };
 
@@ -76,7 +80,7 @@ const LeadDetailsPage = () => {
           <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired />
         </div>
 
-        { currentUser?.role !== ROLE.representative && <CustomMultiSelect
+        {currentUser?.role !== ROLE.representative && <CustomMultiSelect
           name="assigned_to"
           control={control}
           errors={errors}

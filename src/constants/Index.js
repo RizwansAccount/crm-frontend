@@ -25,6 +25,13 @@ const ROLE = {
     manager:"manager"
 };
 
+const snackbarVariant = {
+    success : "success",
+    error : "error",
+    warning : "warning",
+    info : "info",
+};
+
 const setLocalStorage =(key, data)=> {
     if(key && data) {
         localStorage.setItem(key, data);
@@ -44,6 +51,6 @@ const removeLocalStorage =(key)=> {
 };
 
 export {
-    Config, SOURCE_TYPE, LEAD_STATUS, ROLE,
+    Config, SOURCE_TYPE, LEAD_STATUS, ROLE, snackbarVariant,
     setLocalStorage, getLocalStorage, removeLocalStorage
 }

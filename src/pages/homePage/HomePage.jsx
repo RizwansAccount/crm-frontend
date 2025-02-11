@@ -13,6 +13,7 @@ import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSel
 import CustomSelect from '../../components/customSelect/CustomSelect';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
 import { DeleteForever as DeleteIcon } from '@mui/icons-material';
+import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 
 const HomePage = () => {
 
@@ -21,6 +22,7 @@ const HomePage = () => {
   const user_id = location?.state?.user_id;
 
   const { currentUser } = useUserDataManager(user_id);
+  const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
 
   const { data: usersData } = useGetAllUsersQuery();
   const { data: leadsData, refetch: refetchLeadsData, isLoading: isLoadingLeadsData } = useGetAllLeadsQuery();
@@ -84,9 +86,10 @@ const HomePage = () => {
       if (response?.response === "OK") {
         setCreateModal(false);
         reset(undefined, { keepValues: true });
+        fnShowSuccessSnackbar("Lead created successfully!");
       }
     } catch (error) {
-      console.log(error);
+      fnShowErrorSnackbar(error?.data?.message);
     }
   };
 
@@ -94,10 +97,10 @@ const HomePage = () => {
     try {
       const response = await deleteLead(id).unwrap();
       if (response?.data?.response === "OK") {
-        console.log("Deleted Successfully");
+        fnShowSuccessSnackbar("Lead deleted successfully!");
       }
     } catch (error) {
-      console.log(error);
+      fnShowErrorSnackbar(error?.data?.message);
     }
   };
 
