@@ -52,7 +52,7 @@ export const crmApi = createApi({
         updateNote: builder.mutation({ query: ({ id, ...body }) => ({ url: `note/${id}`, method: "PUT", body }), invalidatesTags: [TAG_TYPES.NOTES] }),
 
         //assignment
-        removeAssignment: builder.mutation({ query: (data) => ({ url: `assignment/remove-assign`, method: "DELETE", body: data }) }),
+        removeAssignment: builder.mutation({ query: (data) => ({ url: `assignment/remove-assign`, method: "DELETE", body: data }), invalidatesTags:[TAG_TYPES.CONTACT, TAG_TYPES.LEAD] }),
     }),
 
 });

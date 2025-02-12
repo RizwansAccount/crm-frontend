@@ -7,6 +7,7 @@ import AppLayout from "./AppLayout";
 import ContactPage from "../pages/contactPage/ContactPage";
 import LeadDetailsPage from "../pages/leadDetailsPage/LeadDetailsPage";
 import ContactDetailsPage from "../pages/contactDetailsPage/ContactDetailsPage";
+import LeadPage from "../pages/leadPage/LeadPage";
 
 const ReactRoute = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const ReactRoute = createBrowserRouter([
                 {
                     path: `${ROUTES.contact}`,
                     element: <ContactPage />
+                },
+                {
+                    path: `${ROUTES.lead}`,
+                    element: <LeadPage />
                 },
             ]
         }

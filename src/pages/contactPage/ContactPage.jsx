@@ -23,7 +23,7 @@ const ContactPage = () => {
   const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
 
   const { data: usersData } = useGetAllUsersQuery();
-  const { data: contactsData, refetch: refetchContactsData, isLoading: isLoadingContactsData } = useGetAllContactsQuery();
+  const { data: contactsData, isLoading: isLoadingContactsData } = useGetAllContactsQuery();
   const [createContact, { isLoading: isLoadingCreateContact }] = useCreateContactMutation();
   const [deleteContact, { isLoading: isLoadingDeleteContact }] = useDeleteContactMutation();
 
@@ -79,8 +79,6 @@ const ContactPage = () => {
     assigned_to: contact?.assigned_to
   }));
 
-  useEffect(()=>{ refetchContactsData(); },[currentUser?.user_id]);
-
   const fnNavigateToContactPage = (params) => {
     navigate(`${ROUTES.contactDetailsPage}/${params.row.id}`);
   };
@@ -88,7 +86,7 @@ const ContactPage = () => {
   const fnDeleteContact = async (id) => {
     try {
       const response = await deleteContact(id).unwrap();
-      if (response?.data?.response === "OK") {
+      if (response?.response === "OK") {
         fnShowSuccessSnackbar("Contact deleted successfully!");
       }
     } catch (error) {
@@ -126,7 +124,8 @@ const ContactPage = () => {
       />
 
       <CustomModal open={createModal} title={"Add Contact"} onClose={() => setCreateModal(false)}>
-        <div className='flex flex-col gap-3 w-full border p-8 rounded-lg mt-6'>
+
+        <div className='w-full flex flex-col gap-4'>
           <div className='w-full flex items-center justify-between gap-4'>
             <CustomInput name={'name'} control={control} errors={errors} label={'Name'} isRequired />
             <CustomInput name={'email'} control={control} errors={errors} label={'Email'} isRequired />
@@ -134,15 +133,7 @@ const ContactPage = () => {
 
           <CustomInput name={'address'} control={control} errors={errors} label={'Address'} isRequired />
 
-          <div className='flex flex-col gap-3 w-full border p-4 rounded-lg'>
-            <CustomTagInput
-              name="tags"
-              control={control}
-              errors={errors}
-              label="Tags"
-            />
-          </div>
-
+          <CustomTagInput name="tags" control={control} errors={errors} label="Tags" />
 
           <div className='w-full flex items-center justify-between gap-4'>
             <CustomInput name={'phone'} control={control} errors={errors} label={'Phone'} isRequired />
@@ -160,24 +151,8 @@ const ContactPage = () => {
           <CustomButton style={{ marginTop: 12 }} onClick={handleSubmit(fnCreateContact)} className="w-full">
             {isLoadingCreateContact ? "Loading..." : "Add"}
           </CustomButton>
-
         </div>
-        {/* <div className='w-full flex flex-col gap-4'>
-          <div className='flex gap-4'>
-            <CustomInput name={"name"} control={control} errors={errors} label={"Name"} isRequired />
-            <CustomInput name={"contact"} control={control} errors={errors} label={"Contact"} isRequired />
-          </div>
-          <div className='flex gap-4'>
-            <CustomInput name={"lead_source"} control={control} errors={errors} label={"Source"} isRequired />
-            <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired />
-          </div>
 
-          {currentUser?.role !== ROLE.representative && <CustomMultiSelect name={"assigned_to"} control={control} errors={errors} label={"Assigned To"} options={allRepresentatives} />}
-
-          <CustomButton onClick={handleSubmit(fnCreateLead)} >
-            <span>{isLoadingCreateLead ? "Loading..." : "Add"}</span>
-          </CustomButton>
-        </div> */}
       </CustomModal>
     </div>
   )

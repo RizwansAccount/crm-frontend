@@ -94,21 +94,13 @@ const ContactDetailsPage = () => {
                 </div>
 
                 <CustomInput name={'address'} control={control} errors={errors} label={'Address'} isRequired />
-                
-                <div className='flex flex-col gap-3 w-full border p-4 rounded-lg'>
-                    <CustomTagInput
-                        name="tags"
-                        control={control}
-                        errors={errors}
-                        label="Tags"
-                    />
-                </div>
-
 
                 <div className='w-full flex items-center justify-between gap-4'>
                     <CustomInput name={'phone'} control={control} errors={errors} label={'Phone'} isRequired />
                     <CustomInput name={'company'} control={control} errors={errors} label={'Company'} isRequired />
                 </div>
+
+                <CustomTagInput name="tags" control={control} errors={errors} label="Tags" />
 
                 {currentUser?.role !== ROLE.representative && <CustomMultiSelect
                     name="assigned_to"
