@@ -18,6 +18,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import Navbar from '../navbar/Navbar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 const drawerWidth = 240;
 
@@ -104,7 +105,7 @@ const Sidebar = () => {
         navigate(route);
     };
 
-    const menuItems = ['Home', 'Lead', 'Contact'];
+    const menuItems = ['Home', 'Contact', 'Lead'];
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -155,7 +156,7 @@ const Sidebar = () => {
                                     >
                                         {text === 'Home' ? <DashboardIcon /> :
                                             text === "Lead" ? <LeadIcon />
-                                                : <ContactIcon />}
+                                                : <PeopleAltIcon />}
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={text}

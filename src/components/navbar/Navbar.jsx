@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import MuiAppBar from '@mui/material/AppBar';
 import { styled } from '@mui/material/styles';
 import { IconButton, Toolbar, Typography } from '@mui/material';
@@ -16,7 +16,7 @@ const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
     const dispatch = useDispatch();
     const { currentUser } = useUserDataManager();
 
-    const fnLogout =()=>{
+    const fnLogout = () => {
         removeLocalStorage(Config.userToken);
         dispatch(crmApi.util.resetApiState());
         navigate(ROUTES.login);
@@ -59,9 +59,16 @@ const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
                     <MenuIcon />
                 </IconButton>
                 <div className='flex justify-between w-full'>
-                    { currentUser && <span>{`Welcome, ${currentUser?.name} (${currentUser?.role})`}</span>}
+                    <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                            Greetings, <span className="text-white font-semibold">{currentUser?.name}</span>
+                            <span className="mx-2 text-sm bg-gray-100 px-2 py-0.5 rounded-full text-gray-600">
+                                {currentUser?.role}
+                            </span>
+                        </span>
+                    </div>
                     <div onClick={fnLogout} className='flex items-center gap-2 cursor-pointer'>
-                        <ExitToAppIcon/>
+                        <ExitToAppIcon />
                         <span>Logout</span>
                     </div>
                 </div>

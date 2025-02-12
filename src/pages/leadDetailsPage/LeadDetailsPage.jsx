@@ -11,6 +11,7 @@ import CustomSelect from '../../components/customSelect/CustomSelect';
 import CustomButton from '../../components/customButton/CustomButton';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
 import { useSnackbarManager } from '../../hooks/useSnackbarManager';
+import PageHeaderView from '../../components/views/PageHeaderView';
 
 const LeadDetailsPage = () => {
 
@@ -78,9 +79,7 @@ const LeadDetailsPage = () => {
   return (
     <div className='w-full min-h-screen flex flex-col pb-8 px-10'>
 
-      <h1 className='text-xl font-semibold mt-6'>
-        {`${source} Details`}
-      </h1>
+     <PageHeaderView source={source}/>
 
       <div className='flex flex-col gap-3 w-full border p-8 rounded-lg mt-6'>
         <div className='w-full flex items-center justify-between gap-4'>
