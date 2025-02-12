@@ -1,9 +1,69 @@
-import React from 'react'
+import React from 'react';
+import Users from '@mui/icons-material/PeopleAlt';
+import ContactsBook from '@mui/icons-material/ImportContacts';
+import Target from '@mui/icons-material/TrackChanges';
+import Briefcase from '@mui/icons-material/Work';
+import { useGetAllContactsQuery, useGetAllLeadsQuery, useGetAllUsersQuery } from '../../redux/storeApis';
+import DashboardCard from './components/DashboardCard';
 
 const HomePage = () => {
-  return (
-    <div>HomePage</div>
-  )
-}
+  
+  const { data: contactsData, isLoading: isContactsLoading } = useGetAllContactsQuery();
+  const { data: leadsData, isLoading: isLeadsLoading } = useGetAllLeadsQuery();
+  const { data: usersData, isLoading: isUsersLoading } = useGetAllUsersQuery();
 
-export default HomePage
+  const metrics = React.useMemo(() => [
+    {
+      title: 'Total Leads',
+      value: leadsData?.data?.length,
+      icon: Target,
+      isLoading: isLeadsLoading
+    },
+    {
+      title: 'Active Users',
+      value: usersData?.data?.length,
+      icon: Users,
+      isLoading: isUsersLoading
+    },
+    {
+      title: 'Contacts',
+      value: contactsData?.data?.length,
+      icon: ContactsBook,
+      isLoading: isContactsLoading
+    },
+    {
+      title: 'Opportunities',
+      value: 0,
+      icon: Briefcase,
+      isLoading: false
+    }
+  ], [contactsData, leadsData, usersData, isContactsLoading, isLeadsLoading, isUsersLoading]);
+
+  const handleCardClick = (metric) => {
+    console.log(`Clicked ${metric.title}:`, metric.value);
+  };
+
+  return (
+    <div className="p-6 space-y-6">
+      <h1 className="text-xl font-semibold">Dashboard Overview</h1>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {metrics.map((metric) => (
+          <div 
+            key={metric.title} 
+            onClick={() => handleCardClick(metric)}
+            className="cursor-pointer"
+          >
+            <DashboardCard
+              title={metric.title}
+              value={metric.value}
+              icon={metric.icon}
+              isLoading={metric.isLoading}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default HomePage;
