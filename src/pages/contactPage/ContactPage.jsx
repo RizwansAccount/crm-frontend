@@ -1,5 +1,5 @@
-import React from 'react'
-import { useDeleteContactMutation, useGetAllContactsQuery } from '../../redux/storeApis'
+import React, { useEffect, useState } from 'react'
+import { useCreateContactMutation, useDeleteContactMutation, useGetAllContactsQuery, useGetAllUsersQuery } from '../../redux/storeApis'
 import CustomTable from '../../components/customTable/CustomTable';
 import CustomPopover from '../../components/customPopover/CustomPopover';
 import { ROLE } from '../../constants/Index';
@@ -8,18 +8,42 @@ import { DeleteForever as DeleteIcon } from '@mui/icons-material';
 import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 import { ROUTES } from '../../routes/RouteConstants';
 import { useNavigate } from 'react-router-dom';
+import CustomButton from '../../components/customButton/CustomButton';
+import { useForm } from 'react-hook-form';
+import CustomTagInput from '../../components/customTagInput/CustomTagInput';
+import CustomMultiSelect from '../../components/customMultiSelect/CustomMultiSelect';
+import CustomInput from '../../components/customInput/CustomInput';
+import CustomModal from '../../components/customModal/CustomModal';
 
 const ContactPage = () => {
 
   const navigate = useNavigate();
 
-  const { data: contactsData, isLoading: isLoadingContactsData } = useGetAllContactsQuery();
+  const { currentUser } = useUserDataManager();
+  const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
+
+  const { data: usersData } = useGetAllUsersQuery();
+  const { data: contactsData, refetch: refetchContactsData, isLoading: isLoadingContactsData } = useGetAllContactsQuery();
+  const [createContact, { isLoading: isLoadingCreateContact }] = useCreateContactMutation();
   const [deleteContact, { isLoading: isLoadingDeleteContact }] = useDeleteContactMutation();
 
   const allContacts = contactsData?.data;
 
-  const { currentUser } = useUserDataManager();
-  const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
+  const [createModal, setCreateModal] = useState(false);
+
+  const { handleSubmit, control, reset, formState: { errors } } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      company: "",
+      tags: [],
+      assigned_to: [],
+    },
+  });
+
+  const allRepresentatives = usersData?.data?.filter((user) => user?.role === "representative");
 
   const contactColumns = [
     { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
@@ -55,6 +79,8 @@ const ContactPage = () => {
     assigned_to: contact?.assigned_to
   }));
 
+  useEffect(()=>{ refetchContactsData(); },[currentUser?.user_id]);
+
   const fnNavigateToContactPage = (params) => {
     navigate(`${ROUTES.contactDetailsPage}/${params.row.id}`);
   };
@@ -70,14 +96,89 @@ const ContactPage = () => {
     }
   };
 
+  const fnCreateContact = async (data) => {
+    try {
+      const response = await createContact(data).unwrap();
+      if (response?.response === "OK") {
+        setCreateModal(false);
+        reset();
+        fnShowSuccessSnackbar("Contact created successfully!");
+      }
+    } catch (error) {
+      fnShowErrorSnackbar(error?.data?.message);
+    }
+  };
+
 
   return (
-    <div>
+    <div className='h-full w-full'>
+
+      <div className='flex justify-end mb-4'>
+        <CustomButton onClick={() => setCreateModal(true)}>
+          <span>Create</span>
+        </CustomButton>
+      </div>
+
       <CustomTable
         rows={contactRows}
         columns={contactColumns}
         onRowClick={fnNavigateToContactPage}
       />
+
+      <CustomModal open={createModal} title={"Add Contact"} onClose={() => setCreateModal(false)}>
+        <div className='flex flex-col gap-3 w-full border p-8 rounded-lg mt-6'>
+          <div className='w-full flex items-center justify-between gap-4'>
+            <CustomInput name={'name'} control={control} errors={errors} label={'Name'} isRequired />
+            <CustomInput name={'email'} control={control} errors={errors} label={'Email'} isRequired />
+          </div>
+
+          <CustomInput name={'address'} control={control} errors={errors} label={'Address'} isRequired />
+
+          <div className='flex flex-col gap-3 w-full border p-4 rounded-lg'>
+            <CustomTagInput
+              name="tags"
+              control={control}
+              errors={errors}
+              label="Tags"
+            />
+          </div>
+
+
+          <div className='w-full flex items-center justify-between gap-4'>
+            <CustomInput name={'phone'} control={control} errors={errors} label={'Phone'} isRequired />
+            <CustomInput name={'company'} control={control} errors={errors} label={'Company'} isRequired />
+          </div>
+
+          {currentUser?.role !== ROLE.representative && <CustomMultiSelect
+            name="assigned_to"
+            control={control}
+            errors={errors}
+            label="Assign To"
+            options={allRepresentatives || []}
+          />}
+
+          <CustomButton style={{ marginTop: 12 }} onClick={handleSubmit(fnCreateContact)} className="w-full">
+            {isLoadingCreateContact ? "Loading..." : "Add"}
+          </CustomButton>
+
+        </div>
+        {/* <div className='w-full flex flex-col gap-4'>
+          <div className='flex gap-4'>
+            <CustomInput name={"name"} control={control} errors={errors} label={"Name"} isRequired />
+            <CustomInput name={"contact"} control={control} errors={errors} label={"Contact"} isRequired />
+          </div>
+          <div className='flex gap-4'>
+            <CustomInput name={"lead_source"} control={control} errors={errors} label={"Source"} isRequired />
+            <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired />
+          </div>
+
+          {currentUser?.role !== ROLE.representative && <CustomMultiSelect name={"assigned_to"} control={control} errors={errors} label={"Assigned To"} options={allRepresentatives} />}
+
+          <CustomButton onClick={handleSubmit(fnCreateLead)} >
+            <span>{isLoadingCreateLead ? "Loading..." : "Add"}</span>
+          </CustomButton>
+        </div> */}
+      </CustomModal>
     </div>
   )
 }

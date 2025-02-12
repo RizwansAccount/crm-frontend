@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCreateLeadMutation, useDeleteLeadMutation, useGetAllLeadsQuery, useGetAllUsersQuery } from '../../redux/storeApis';
 import CustomTable from '../../components/customTable/CustomTable';
 import CustomPopover from '../../components/customPopover/CustomPopover';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
 import { LEAD_STATUS, ROLE } from '../../constants/Index';
 import CustomButton from '../../components/customButton/CustomButton';
@@ -18,10 +18,8 @@ import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 const HomePage = () => {
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const user_id = location?.state?.user_id;
 
-  const { currentUser } = useUserDataManager(user_id);
+  const { currentUser } = useUserDataManager();
   const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
 
   const { data: usersData } = useGetAllUsersQuery();
@@ -74,7 +72,7 @@ const HomePage = () => {
     assigned_to: lead?.assigned_to
   }));
 
-  useEffect(() => { refetchLeadsData(); }, [user_id]);
+  useEffect(() => { refetchLeadsData(); }, [currentUser?.user_id]);
 
   const fnNavigateToLeadDetailsPage = (params) => {
     navigate(`${ROUTES.leadDetailsPage}/${params.row.id}`);
@@ -96,7 +94,7 @@ const HomePage = () => {
   const fnDeleteLead = async (id) => {
     try {
       const response = await deleteLead(id).unwrap();
-      if (response?.data?.response === "OK") {
+      if (response?.response === "OK") {
         fnShowSuccessSnackbar("Lead deleted successfully!");
       }
     } catch (error) {
@@ -106,16 +104,19 @@ const HomePage = () => {
 
   return (
     <div className='h-full w-full'>
+
       <div className='flex justify-end mb-4'>
         <CustomButton onClick={() => setCreateModal(true)}>
           <span>Create</span>
         </CustomButton>
       </div>
-      <CustomTable
+
+      {isLoadingLeadsData ? <span>Loading...</span> : <CustomTable
         rows={leadRows}
         columns={leadColumns}
         onRowClick={fnNavigateToLeadDetailsPage}
-      />
+      />}
+
       <CustomModal open={createModal} title={"Add Lead"} onClose={() => setCreateModal(false)}>
         <div className='w-full flex flex-col gap-4'>
           <div className='flex gap-4'>
@@ -127,7 +128,7 @@ const HomePage = () => {
             <CustomSelect name={"status"} control={control} errors={errors} label={"Status"} options={LEAD_STATUS} isRequired />
           </div>
 
-          { currentUser?.role !== ROLE.representative && <CustomMultiSelect name={"assigned_to"} control={control} errors={errors} label={"Assigned To"} options={allRepresentatives} />}
+          {currentUser?.role !== ROLE.representative && <CustomMultiSelect name={"assigned_to"} control={control} errors={errors} label={"Assigned To"} options={allRepresentatives} />}
 
           <CustomButton onClick={handleSubmit(fnCreateLead)} >
             <span>{isLoadingCreateLead ? "Loading..." : "Add"}</span>

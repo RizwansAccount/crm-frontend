@@ -32,7 +32,7 @@ const LoginPage = () => {
       const response = await loginUser(data).unwrap();
       console.log(response);
       setLocalStorage(Config.userToken, response?.data?.token);
-      navigate(ROUTES.home, { state : { user_id : response?.data?.user_id } });
+      navigate(ROUTES.home);
     } catch (error) {
       console.log(error?.data?.message || error);
     }

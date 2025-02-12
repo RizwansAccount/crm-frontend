@@ -5,21 +5,26 @@ const CustomTagInput = ({ control, name, label, errors }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleKeyDown = (e, value, onChange) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
+    const inputTrimmedValue = inputValue.trim();
+
+    if (e.key === 'Enter' && inputTrimmedValue) {
       e.preventDefault();
-      if (!value.includes(inputValue.trim())) {
-        const newTags = [...value, inputValue.trim()];
+
+      if (!value.includes(inputTrimmedValue)) {
+        const newTags = [...value, inputTrimmedValue];
         onChange(newTags);
       }
       setInputValue('');
-    } else if (e.key === 'Backspace' && !inputValue && value.length > 0) {
-      const newTags = value.slice(0, -1);
-      onChange(newTags);
-    }
+
+    } else
+      if (e.key === 'Backspace' && !inputValue && value.length > 0) {
+        const newTags = value?.slice(0, -1);
+        onChange(newTags);
+      }
   };
 
   const removeTag = (tagToRemove, value, onChange) => {
-    const newTags = value.filter(tag => tag !== tagToRemove);
+    const newTags = value?.filter(tag => tag !== tagToRemove);
     onChange(newTags);
   };
 
@@ -35,7 +40,7 @@ const CustomTagInput = ({ control, name, label, errors }) => {
             </label>
           )}
           <div className="min-h-[42px] p-2 border rounded-md flex flex-wrap gap-2 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
-            {value.map((tag, index) => (
+            {value?.map((tag, index) => (
               <span
                 key={index}
                 className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md flex items-center gap-1 text-sm"

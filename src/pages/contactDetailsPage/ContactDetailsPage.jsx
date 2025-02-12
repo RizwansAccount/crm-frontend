@@ -71,6 +71,7 @@ const ContactDetailsPage = () => {
         try {
             const response = await removeAssign({ source, source_id: id, ...data }).unwrap();
             if (response?.response === "OK") {
+                console.log("okay here bro hahahahaha")
                 refetchContactData();
                 fnShowSuccessSnackbar("Assignment removed successfully!");
             }

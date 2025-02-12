@@ -8,34 +8,19 @@ import { Config, removeLocalStorage } from '../../constants/Index';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
-// import { Config, removeLocalStorage } from '../../constants/Index';
-// import { useNavigate } from 'react-router-dom';
-// import { ROUTES } from '../../routes/RouteConstants';
+import { useDispatch } from 'react-redux';
+import { crmApi } from '../../redux/storeApis';
 
 const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { currentUser } = useUserDataManager();
 
     const fnLogout =()=>{
         removeLocalStorage(Config.userToken);
+        dispatch(crmApi.util.resetApiState());
         navigate(ROUTES.login);
     };
-
-    // const [anchorEl, setAnchorEl] = useState(null);
-
-    // const fnOpenMenu = (event) => {
-    //     setAnchorEl(event.currentTarget);
-    // };
-
-    // const fnCloseMenu =()=> {
-    //     setAnchorEl(null);
-    // };
-
-    // const fnLogout = () => {
-    //     fnCloseMenu();
-    //     removeLocalStorage(Config.userToken);
-    //     navigate(ROUTES.login);
-    // };
 
     const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme }) => ({
         zIndex: theme.zIndex.drawer + 1,
@@ -74,7 +59,7 @@ const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
                     <MenuIcon />
                 </IconButton>
                 <div className='flex justify-between w-full'>
-                    <span>{`Welcome, ${currentUser?.name} (${currentUser?.role})`}</span>
+                    { currentUser && <span>{`Welcome, ${currentUser?.name} (${currentUser?.role})`}</span>}
                     <div onClick={fnLogout} className='flex items-center gap-2 cursor-pointer'>
                         <ExitToAppIcon/>
                         <span>Logout</span>

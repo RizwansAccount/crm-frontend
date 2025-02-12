@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useGetAllUsersQuery, useGetLeadQuery, useRemoveAssignmentMutation, useUpdateLeadMutation } from '../../redux/storeApis';
 import { useForm } from 'react-hook-form';
 import CustomInput from '../../components/customInput/CustomInput';
