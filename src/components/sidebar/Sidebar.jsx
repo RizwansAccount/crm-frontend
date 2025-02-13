@@ -88,7 +88,7 @@ const Sidebar = () => {
                 return ROUTES.lead;
             case 'Contact':
                 return ROUTES.contact;
-            case 'Home':
+            case 'Dashboard':
                 return ROUTES.home;
             default:
                 return '';
@@ -105,7 +105,7 @@ const Sidebar = () => {
         navigate(route);
     };
 
-    const menuItems = ['Home', 'Contact', 'Lead'];
+    const menuItems = ['Dashboard', 'Contact', 'Lead'];
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -154,7 +154,7 @@ const Sidebar = () => {
                                             open ? { mr: 3 } : { mr: 'auto' },
                                         ]}
                                     >
-                                        {text === 'Home' ? <DashboardIcon /> :
+                                        {text === 'Dashboard' ? <DashboardIcon /> :
                                             text === "Lead" ? <LeadIcon />
                                                 : <PeopleAltIcon />}
                                     </ListItemIcon>
