@@ -4,6 +4,7 @@ export const ROUTES = {
     signup : "/signup",
     contact : "/contact",
     lead : "/lead",
+    opportunity: "/opportunity",
 
     leadDetailsPage : "/lead-details",
     contactDetailsPage : "/contact-details",

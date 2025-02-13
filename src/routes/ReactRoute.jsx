@@ -8,6 +8,7 @@ import ContactPage from "../pages/contactPage/ContactPage";
 import LeadDetailsPage from "../pages/leadDetailsPage/LeadDetailsPage";
 import ContactDetailsPage from "../pages/contactDetailsPage/ContactDetailsPage";
 import LeadPage from "../pages/leadPage/LeadPage";
+import OpportunityPage from "../pages/opportunityPage/OpportunityPage";
 
 const ReactRoute = createBrowserRouter([
     {
@@ -31,6 +32,10 @@ const ReactRoute = createBrowserRouter([
                 {
                     path: `${ROUTES.lead}`,
                     element: <LeadPage />
+                },
+                {
+                    path: `${ROUTES.opportunity}`,
+                    element: <OpportunityPage />
                 },
             ]
         }
