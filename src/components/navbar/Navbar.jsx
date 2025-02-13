@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { IconButton, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { Config, removeLocalStorage } from '../../constants/Index';
+import { Config, removeLocalStorage, ROLE } from '../../constants/Index';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
@@ -62,8 +62,8 @@ const Navbar = ({ open, handleDrawerOpen, drawerWidth }) => {
                     <div className="flex items-center gap-2">
                         <span className="font-medium">
                             Greetings, <span className="text-white font-semibold">{currentUser?.name}</span>
-                            <span className="mx-2 text-sm bg-gray-100 px-2 py-0.5 rounded-full text-gray-600">
-                                {currentUser?.role}
+                            <span className="mx-2 text-sm bg-gray-100 px-3 py-1 rounded-full text-gray-600">
+                                {currentUser?.role === ROLE.representative ? "sales-representative" : currentUser?.role}
                             </span>
                         </span>
                     </div>

@@ -44,6 +44,8 @@ const LeadPage = () => {
 
   const leadColumns = [
     { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
+    { field: 'contact', headerName: 'Contact', flex: 1, minWidth: 150 },
+    { field: 'lead_source', headerName: 'Source', flex: 1, minWidth: 150 },
     { field: 'created_by', headerName: 'Created By', flex: 1, minWidth: 150, renderCell: (params) => <h1>{params?.row?.created_by?.name}</h1> },
     { field: 'last_updated_by', headerName: 'Updated By', flex: 1, minWidth: 150 },
     { field: 'assigned_to', headerName: 'Assigned To', flex: 1, minWidth: 150, renderCell: (params) => <CustomPopover list={params?.value} /> },
@@ -66,6 +68,8 @@ const LeadPage = () => {
   const leadRows = allLeads?.map((lead) => ({
     id: lead?._id,
     name: lead?.name,
+    contact: lead?.contact,
+    lead_source: lead?.lead_source,
     created_by: lead?.created_by,
     last_updated_by: lead?.last_updated_by?.name,
     status: lead?.status,

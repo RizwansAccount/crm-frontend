@@ -83,7 +83,7 @@ const ContactDetailsPage = () => {
 
     return (
         <div className='w-full min-h-screen flex flex-col pb-8 px-10'>
- 
+
             <PageHeaderView source={source} />
 
             <div className='flex flex-col gap-3 w-full border p-8 rounded-lg mt-6'>

@@ -12,13 +12,13 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ContactIcon from '@mui/icons-material/Contacts';
+// import ContactIcon from '@mui/icons-material/Contacts';
 import LeadIcon from '@mui/icons-material/Leaderboard';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Navbar from '../navbar/Navbar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ROUTES } from '../../routes/RouteConstants';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ContactIcon from '@mui/icons-material/ImportContacts';
 
 const drawerWidth = 240;
 
@@ -156,7 +156,7 @@ const Sidebar = () => {
                                     >
                                         {text === 'Dashboard' ? <DashboardIcon /> :
                                             text === "Lead" ? <LeadIcon />
-                                                : <PeopleAltIcon />}
+                                                : <ContactIcon />}
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={text}
