@@ -5,6 +5,7 @@ export const ROUTES = {
     contact : "/contact",
     lead : "/lead",
     opportunity: "/opportunity",
+    pipeline : "/pipeline",
 
     leadDetailsPage : "/lead-details",
     contactDetailsPage : "/contact-details",

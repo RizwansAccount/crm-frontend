@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Config } from '../constants/Index';
 
-const TAG_TYPES = { LEAD: "Lead", CONTACT: "Contact", FILES: "Files", NOTES: "Notes" };
+const TAG_TYPES = { LEAD: "Lead", CONTACT: "Contact", FILES: "Files", NOTES: "Notes", 
+    PIPELINE : "Pipeline", PIPELINE_STAGES : "Pipeline Stages", OPPORTUNITY : "Opportunity" };
 
 export const crmApi = createApi({
 
@@ -16,7 +17,7 @@ export const crmApi = createApi({
         },
     }),
 
-    tagTypes: [TAG_TYPES.LEAD, TAG_TYPES.CONTACT, TAG_TYPES.FILES, TAG_TYPES.NOTES],
+    tagTypes: Object.values(TAG_TYPES),
 
     endpoints: (builder) => ({
         //users
@@ -32,12 +33,26 @@ export const crmApi = createApi({
         updateLead: builder.mutation({ query: ({ id, ...body }) => ({ url: `lead/${id}`, method: "PATCH", body }), invalidatesTags: [TAG_TYPES.LEAD] }),
         deleteLead: builder.mutation({ query: (id) => ({ url: `lead/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.LEAD] }),
         
-        //leads
+        //contacts
         getAllContacts: builder.query({ query: () => 'contact', providesTags: [TAG_TYPES.CONTACT] }),
         getContact: builder.query({ query: (id) => `contact/${id}`, providesTags: [TAG_TYPES.CONTACT] }),
         createContact: builder.mutation({ query: (data) => ({ url: 'contact', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.CONTACT] }),
         updateContact: builder.mutation({ query: ({ id, ...body }) => ({ url: `contact/${id}`, method: "PATCH", body }), invalidatesTags: [TAG_TYPES.CONTACT] }),
         deleteContact: builder.mutation({ query: (id) => ({ url: `contact/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.CONTACT] }),
+       
+        //pipelines
+        getAllPipelines: builder.query({ query: () => 'pipeline', providesTags: [TAG_TYPES.PIPELINE] }),
+        getPipeline: builder.query({ query: (id) => `pipeline/${id}`, providesTags: [TAG_TYPES.PIPELINE] }),
+        createPipeline: builder.mutation({ query: (data) => ({ url: 'pipeline', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.PIPELINE] }),
+        updatePipeline: builder.mutation({ query: ({ id, ...body }) => ({ url: `pipeline/${id}`, method: "PUT", body }), invalidatesTags: [TAG_TYPES.PIPELINE] }),
+        deletePipeline: builder.mutation({ query: (id) => ({ url: `pipeline/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.PIPELINE] }),
+        
+        //stages
+        getAllStages: builder.query({ query: (id) => `stage?pipeline_id=${id}`, providesTags: [TAG_TYPES.PIPELINE_STAGES] }),
+        getStage: builder.query({ query: (id) => `stage/${id}`, providesTags: [TAG_TYPES.PIPELINE_STAGES] }),
+        createStage: builder.mutation({ query: (data) => ({ url: 'stage', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.PIPELINE_STAGES, TAG_TYPES.PIPELINE] }),
+        updateStage: builder.mutation({ query: ({ id, ...body }) => ({ url: `stage/${id}`, method: "PUT", body }), invalidatesTags: [TAG_TYPES.PIPELINE_STAGES, TAG_TYPES.PIPELINE] }),
+        deleteStage: builder.mutation({ query: (id) => ({ url: `stage/${id}`, method: "DELETE" }), invalidatesTags: [TAG_TYPES.PIPELINE_STAGES, TAG_TYPES.PIPELINE] }),
 
         //files 
         createFile: builder.mutation({ query: (data) => ({ url: 'file', method: "POST", body: data }), invalidatesTags: [TAG_TYPES.FILES] }),
@@ -77,6 +92,20 @@ export const {
     useCreateContactMutation,
     useUpdateContactMutation,
     useDeleteContactMutation,
+
+    //pipelines
+    useGetAllPipelinesQuery,
+    useGetPipelineQuery,
+    useCreatePipelineMutation,
+    useUpdatePipelineMutation,
+    useDeletePipelineMutation,
+
+    //stages
+    useGetAllStagesQuery,
+    useGetStageQuery,
+    useCreateStageMutation,
+    useUpdateStageMutation,
+    useDeleteStageMutation,
 
     //files
     useCreateFileMutation,

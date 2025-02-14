@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Drawer as MuiDrawer, List, CssBaseline, Divider, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import {
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
-  Leaderboard as LeadIcon,
-  Dashboard as DashboardIcon,
-  AccountBox as ContactIcon,
+    ChevronLeft as ChevronLeftIcon,
+    ChevronRight as ChevronRightIcon,
+    Leaderboard as LeadIcon,
+    Dashboard as DashboardIcon,
+    AccountBox as ContactIcon,
+    Cable as PipelineIcon
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../navbar/Navbar';
@@ -82,6 +83,8 @@ const Sidebar = () => {
                 return ROUTES.contact;
             case 'Dashboard':
                 return ROUTES.home;
+            case 'Pipeline':
+                return ROUTES.pipeline;
             default:
                 return '';
         }
@@ -97,7 +100,7 @@ const Sidebar = () => {
         navigate(route);
     };
 
-    const menuItems = ['Dashboard', 'Contact', 'Lead'];
+    const menuItems = ['Dashboard', 'Contact', 'Lead', 'Pipeline'];
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -117,7 +120,7 @@ const Sidebar = () => {
                     {menuItems.map((text) => {
                         const active = isItemActive(text);
                         return (
-                            <ListItem key={text} disablePadding sx={{ display: 'flex', flexDirection:'column', alignItems:'center' }}>
+                            <ListItem key={text} disablePadding sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <ListItemButton
                                     sx={[
                                         {
@@ -125,11 +128,11 @@ const Sidebar = () => {
                                             px: 2.5,
                                             backgroundColor: active ? "#1976D2" : 'transparent',
                                             '&:hover': {
-                                                backgroundColor: active 
-                                                    ? "#1976D2" 
+                                                backgroundColor: active
+                                                    ? "#1976D2"
                                                     : theme.palette.action.hover,
                                             },
-                                            width : "85%",
+                                            width: "85%",
                                             borderRadius: 1
                                         },
                                         open ? { justifyContent: 'initial' } : { justifyContent: 'center' },
@@ -138,22 +141,23 @@ const Sidebar = () => {
                                 >
                                     <ListItemIcon
                                         sx={[
-                                            { 
-                                                minWidth: 0, 
+                                            {
+                                                minWidth: 0,
                                                 justifyContent: 'center',
                                                 color: active ? 'white' : 'inherit',
                                             },
                                             open ? { mr: 3 } : { mr: 'auto' },
                                         ]}
                                     >
-                                        {text === 'Dashboard' ? <DashboardIcon /> :
-                                            text === "Lead" ? <LeadIcon />
-                                                : <ContactIcon style={{height: 27, width:27}} />}
+                                        {text === 'Dashboard' ? <DashboardIcon />
+                                            : text === "Lead" ? <LeadIcon />
+                                                : text === "Pipeline" ? <PipelineIcon />
+                                                    : <ContactIcon style={{ height: 27, width: 27 }} />}
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={text}
                                         sx={[
-                                            { 
+                                            {
                                                 color: active ? "white" : 'inherit',
                                             },
                                             open ? { opacity: 1 } : { opacity: 0 },
