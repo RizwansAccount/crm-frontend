@@ -1,24 +1,16 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-// import ContactIcon from '@mui/icons-material/Contacts';
-import LeadIcon from '@mui/icons-material/Leaderboard';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import Navbar from '../navbar/Navbar';
+import { Box, Drawer as MuiDrawer, List, CssBaseline, Divider, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Leaderboard as LeadIcon,
+  Dashboard as DashboardIcon,
+  AccountBox as ContactIcon,
+} from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Navbar from '../navbar/Navbar';
 import { ROUTES } from '../../routes/RouteConstants';
-import ContactIcon from '@mui/icons-material/ImportContacts';
 
 const drawerWidth = 240;
 
@@ -156,7 +148,7 @@ const Sidebar = () => {
                                     >
                                         {text === 'Dashboard' ? <DashboardIcon /> :
                                             text === "Lead" ? <LeadIcon />
-                                                : <ContactIcon />}
+                                                : <ContactIcon style={{height: 27, width:27}} />}
                                     </ListItemIcon>
                                     <ListItemText
                                         primary={text}
