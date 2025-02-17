@@ -50,7 +50,32 @@ const removeLocalStorage =(key)=> {
     }
 };
 
+const formattedDate_yyyy_mm_dd = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-CA');
+};
+
+const formattedDate_mm_dd_yyyy = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}-${day}-${year}`;
+};
+
+const convertDateIntoFormat = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+};
+
 export {
     Config, SOURCE_TYPE, LEAD_STATUS, ROLE, snackbarVariant,
-    setLocalStorage, getLocalStorage, removeLocalStorage
+    setLocalStorage, getLocalStorage, removeLocalStorage, convertDateIntoFormat, formattedDate_mm_dd_yyyy, formattedDate_yyyy_mm_dd
 }

@@ -12,6 +12,7 @@ import { useUserDataManager } from '../../hooks/useUserDataManager';
 import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 import CustomTagInput from '../../components/customTagInput/CustomTagInput';
 import PageHeaderView from '../../components/views/PageHeaderView';
+import OpportunityView from '../../components/views/OpportunityView';
 
 const ContactDetailsPage = () => {
 
@@ -118,6 +119,8 @@ const ContactDetailsPage = () => {
 
             <NotesView source={source} source_id={id} />
             <FilesView source={source} source_id={id} />
+
+            <OpportunityView source={source} source_id={id} />
 
         </div>
     )

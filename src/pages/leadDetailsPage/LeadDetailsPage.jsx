@@ -12,6 +12,7 @@ import CustomButton from '../../components/customButton/CustomButton';
 import { useUserDataManager } from '../../hooks/useUserDataManager';
 import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 import PageHeaderView from '../../components/views/PageHeaderView';
+import OpportunityView from '../../components/views/OpportunityView';
 
 const LeadDetailsPage = () => {
 
@@ -109,6 +110,8 @@ const LeadDetailsPage = () => {
 
       <NotesView source={source} source_id={id} />
       <FilesView source={source} source_id={id} />
+
+      <OpportunityView source={source} source_id={id} />
 
     </div>
   )

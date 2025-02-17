@@ -41,12 +41,12 @@ const HomePage = () => {
       icon: PipelineIcon,
       isLoading: isPipelinesLoading
     },
-    {
-      title: 'Opportunities',
-      value: 0,
-      icon: Briefcase,
-      isLoading: false
-    }
+    // {
+    //   title: 'Opportunities',
+    //   value: 0,
+    //   icon: Briefcase,
+    //   isLoading: false
+    // }
   ], [contactsData, leadsData, usersData, isContactsLoading, isLeadsLoading, isUsersLoading]);
 
   const handleCardClick = (metric) => {
