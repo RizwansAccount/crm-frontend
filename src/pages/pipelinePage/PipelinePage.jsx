@@ -10,16 +10,19 @@ import { useCreatePipelineMutation, useCreateStageMutation, useDeletePipelineMut
 import { useSnackbarManager } from '../../hooks/useSnackbarManager';
 import { RoundedBtn } from '../../components/customButton/CustomButton';
 import CustomInput from '../../components/customInput/CustomInput';
+import { useUserDataManager } from '../../hooks/useUserDataManager';
+import { ROLE } from '../../constants/Index';
 
 const PipelinePage = () => {
     const { data: pipelineData, isLoading: isLoadingPipelineData } = useGetAllPipelinesQuery();
     const [createPipeline, { isLoading: isLoadingCreatePipeline }] = useCreatePipelineMutation();
-    const [deletePipeline, { isLoading : isLoadingDeletePipeline }] = useDeletePipelineMutation();
+    const [deletePipeline, { isLoading: isLoadingDeletePipeline }] = useDeletePipelineMutation();
     const [createStage, { isLoading: isLoadingCreateStage }] = useCreateStageMutation();
     const [deleteStage, { isLoading: isLoadingDeleteStage }] = useDeleteStageMutation();
     const [updateStage, { isLoading: isLoadingUpdateStage }] = useUpdateStageMutation();
 
     const { fnShowSuccessSnackbar, fnShowErrorSnackbar } = useSnackbarManager();
+    const { currentUser } = useUserDataManager();
 
     const allPipelines = pipelineData?.data;
 
@@ -29,12 +32,12 @@ const PipelinePage = () => {
 
     // Form for new pipeline
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
-        defaultValues: { name: '', stages: [{ name: '' }]}
+        defaultValues: { name: '', stages: [{ name: '' }] }
     });
 
     // Form for editing/adding single stage
     const { control: stageControl, handleSubmit: handleStageSubmit, reset: resetStageForm } = useForm({
-        defaultValues: { name: ''}
+        defaultValues: { name: '' }
     });
 
     const { fields, append, remove } = useFieldArray({
@@ -102,7 +105,7 @@ const PipelinePage = () => {
         try {
             if (!selectedStage) return;
             const updateData = {
-                id : selectedStage?._id,
+                id: selectedStage?._id,
                 pipeline_id: selectedStage.pipeline_id,
                 name: data.name.trim()
             };
@@ -129,10 +132,15 @@ const PipelinePage = () => {
 
     return (
         <div className="w-full p-6 space-y-6">
-            <RoundedBtn onClick={() => setShowNewPipelineForm(true)}>
-                <Plus className="w-4 h-4" />
-                <span>Create New Pipeline</span>
-            </RoundedBtn>
+
+            <div className='flex items-center justify-between'>
+                <span className='font-semibold text-[22px]'>Pipelines</span>
+
+                {currentUser?.role !== ROLE.representative && <RoundedBtn onClick={() => setShowNewPipelineForm(true)}>
+                    <Plus className="w-4 h-4" />
+                    <span>Create New Pipeline</span>
+                </RoundedBtn>}
+            </div>
 
             {showNewPipelineForm && (
                 <Card className="w-full">
@@ -143,13 +151,13 @@ const PipelinePage = () => {
 
                     <CardContent className="p-4 space-y-4">
 
-                        <CustomInput 
-                            name="name" 
-                            control={control} 
-                            errors={errors} 
-                            label="Pipeline Name" 
-                            placeholder="Enter pipeline name" 
-                            isRequired={true} 
+                        <CustomInput
+                            name="name"
+                            control={control}
+                            errors={errors}
+                            label="Pipeline Name"
+                            placeholder="Enter pipeline name"
+                            isRequired={true}
                         />
 
                         <>
@@ -191,14 +199,14 @@ const PipelinePage = () => {
                         </>
 
                         <div className="flex gap-2">
-                            <RoundedBtn 
-                                disabled={isLoadingCreatePipeline} 
+                            <RoundedBtn
+                                disabled={isLoadingCreatePipeline}
                                 onClick={handleSubmit(fnCreatePipeline)}
                             >
                                 {isLoadingCreatePipeline ? 'Creating...' : 'Create Pipeline'}
                             </RoundedBtn>
-                            <button 
-                                onClick={fnOnCancel} 
+                            <button
+                                onClick={fnOnCancel}
                                 className="px-4 py-2 border rounded hover:bg-gray-50"
                             >
                                 Cancel
@@ -211,14 +219,19 @@ const PipelinePage = () => {
             {allPipelines?.map(pipeline => (
                 <Card key={pipeline._id} className="w-full p-4">
                     <div className="flex flex-row items-center justify-between">
-                        <span className="font-medium">{pipeline?.name}</span>
+                        <div className='flex flex-col'>
+                            <span className="font-medium">{pipeline?.name}</span>
+                            <span className="font-medium text-[12px] text-gray-400">
+                                {`created by : ${pipeline?.created_by?.name} (${pipeline?.created_by?.role} )`}
+                            </span>
+                        </div>
                         <div className="flex items-center gap-2">
-                            <button 
+                            {currentUser?.role !== ROLE.representative && <button
                                 onClick={() => setShowAddStageForm(pipeline._id)}
                                 className="p-1 hover:bg-blue-50 rounded-full text-blue-600"
                             >
                                 <Plus className="w-5 h-5" />
-                            </button>
+                            </button>}
                         </div>
                     </div>
 
@@ -295,20 +308,20 @@ const PipelinePage = () => {
                                                 <div className="w-fit p-2 bg-gray-100 rounded-lg text-sm">
                                                     {stage?.name}
                                                 </div>
-                                                <div className="absolute bottom-[-4] right-0 hidden group-hover:flex gap-1">
+                                                {currentUser?.role !== ROLE.representative && <div className="absolute bottom-[-4] right-0 hidden group-hover:flex gap-1">
                                                     <button
-                                                        onClick={() => fnOnChangeStage({...stage, pipeline_id : pipeline?._id})}
+                                                        onClick={() => fnOnChangeStage({ ...stage, pipeline_id: pipeline?._id })}
                                                         className="px-2 py-1 bg-gray-100 shadow rounded-full hover:bg-gray-50"
                                                     >
-                                                        <Edit style={{height:16, width: 16}} />
+                                                        <Edit style={{ height: 16, width: 16 }} />
                                                     </button>
                                                     <button
                                                         onClick={() => fnDeleteStage(stage._id, stage.name)}
                                                         className="px-2 py-1 bg-gray-100 shadow rounded-full hover:bg-gray-50 text-red-500"
                                                     >
-                                                        <Delete style={{height:16, width: 16}} />
+                                                        <Delete style={{ height: 16, width: 16 }} />
                                                     </button>
-                                                </div>
+                                                </div>}
                                             </div>
                                         )}
                                     </div>
@@ -320,9 +333,9 @@ const PipelinePage = () => {
                         </div>
                     </CardContent>
 
-                    <div className='flex flex-col items-end'>
-                        <Delete style={{color:'red', cursor:'pointer'}} onClick={()=>fnDeletePipeline(pipeline?._id)} />
-                    </div>
+                    {currentUser?.role !== ROLE.representative && <div className='flex flex-col items-end'>
+                        <Delete style={{ color: 'red', cursor: 'pointer' }} onClick={() => fnDeletePipeline(pipeline?._id)} />
+                    </div>}
 
                 </Card>
             ))}

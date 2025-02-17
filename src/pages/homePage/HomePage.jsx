@@ -1,9 +1,12 @@
 import React from 'react';
-import Users from '@mui/icons-material/PeopleAlt';
-import ContactsBook from '@mui/icons-material/ImportContacts';
-import Target from '@mui/icons-material/TrackChanges';
-import Briefcase from '@mui/icons-material/Work';
-import { useGetAllContactsQuery, useGetAllLeadsQuery, useGetAllUsersQuery } from '../../redux/storeApis';
+import {
+  Cable as PipelineIcon,
+  Work as Briefcase,
+  TrackChanges as Target,
+  ImportContacts as ContactsBook,
+  PeopleAlt as Users
+} from '@mui/icons-material';
+import { useGetAllContactsQuery, useGetAllLeadsQuery, useGetAllPipelinesQuery, useGetAllUsersQuery } from '../../redux/storeApis';
 import DashboardCard from './components/DashboardCard';
 
 const HomePage = () => {
@@ -11,6 +14,7 @@ const HomePage = () => {
   const { data: contactsData, isLoading: isContactsLoading } = useGetAllContactsQuery();
   const { data: leadsData, isLoading: isLeadsLoading } = useGetAllLeadsQuery();
   const { data: usersData, isLoading: isUsersLoading } = useGetAllUsersQuery();
+  const { data: pipelinesData, isLoading : isPipelinesLoading } = useGetAllPipelinesQuery();
 
   const metrics = React.useMemo(() => [
     {
@@ -30,6 +34,12 @@ const HomePage = () => {
       value: contactsData?.data?.length,
       icon: ContactsBook,
       isLoading: isContactsLoading
+    },
+    {
+      title: 'Pipelines',
+      value: pipelinesData?.data?.length,
+      icon: PipelineIcon,
+      isLoading: isPipelinesLoading
     },
     {
       title: 'Opportunities',
